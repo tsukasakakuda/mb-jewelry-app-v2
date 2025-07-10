@@ -18,3 +18,9 @@
 JSON解析エラーを修正し、正しい形式のキーを設定完了
 - 余分な改行を削除
 - 完全な1行JSONとして設定
+
+## テスト4回目（最終）
+Private key形式エラーを修正し、新しいサービスアカウントキーを生成
+- Production環境: private_key_id: de5a8ad5603ac89eafc72f1d26b1a2c1da780cb2
+- Development環境: private_key_id: aa448bfd7636926c0d584fe6147f41ebc532ee5f
+- 圧縮JSON形式で再設定完了

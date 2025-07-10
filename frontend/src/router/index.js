@@ -20,11 +20,18 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log('Router navigation:', { to: to.path, from: from.path })
+  console.log('Requires auth:', to.meta.requiresAuth)
+  console.log('Is authenticated:', isAuthenticated())
+  
   if (to.meta.requiresAuth && !isAuthenticated()) {
+    console.log('Redirecting to login - not authenticated')
     next('/login');
   } else if (to.name === 'LoginPage' && isAuthenticated()) {
+    console.log('Redirecting to home - already authenticated')
     next('/');
   } else {
+    console.log('Allowing navigation')
     next();
   }
 });

@@ -38,7 +38,7 @@ def token_required(f):
         return f(*args, **kwargs)
     return decorated
 
-@app.route('/api/login', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def login():
     try:
         data = request.json
@@ -51,9 +51,10 @@ def login():
         password_hash = hashlib.sha256(password.encode()).hexdigest()
         
         if username in users and users[username] == password_hash:
+            from datetime import datetime, timezone
             token = jwt.encode({
                 'username': username,
-                'exp': datetime.utcnow().timestamp() + 3600  # 1時間有効
+                'exp': datetime.now(timezone.utc).timestamp() + 3600  # 1時間有効
             }, SECRET_KEY, algorithm='HS256')
             
             return jsonify({'token': token, 'message': 'ログインに成功しました'})

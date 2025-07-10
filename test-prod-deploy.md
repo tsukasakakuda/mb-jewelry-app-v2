@@ -1,0 +1,11 @@
+# Production Deploy Test
+
+このファイルはProduction環境の自動デプロイ機能をテストするためのものです。
+
+## テスト時刻
+2025-07-10
+
+## テスト内容
+- GitHub ActionsでのProduction環境自動デプロイ機能の動作確認
+- GCP Cloud Runへのデプロイ成功確認
+- 権限設定の確認

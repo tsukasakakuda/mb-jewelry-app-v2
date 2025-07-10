@@ -1,14 +1,14 @@
-name: Deploy to GCP Cloud Run
+name: Deploy to Staging
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ staging ]
   pull_request:
-    branches: [ dev ]
+    branches: [ staging ]
 
 env:
-  PROJECT_ID: mb-jewelry-dev
-  SERVICE_NAME: mb-jewelry-dev
+  PROJECT_ID: mb-jewelry-staging
+  SERVICE_NAME: mb-jewelry-staging
   REGION: asia-northeast1
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2
       with:
-        credentials_json: ${{ secrets.GCP_SA_KEY_DEV }}
+        credentials_json: ${{ secrets.GCP_SA_KEY_STAGING }}
 
     - name: Setup Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v2

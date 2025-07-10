@@ -2,13 +2,13 @@ name: Deploy to GCP Cloud Run
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
   pull_request:
-    branches: [ main ]
+    branches: [ dev ]
 
 env:
   PROJECT_ID: mb-jewelry-dev
-  SERVICE_NAME: mb-jewelry-app
+  SERVICE_NAME: mb-jewelry-app-dev
   REGION: asia-northeast1
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
     - name: Authenticate to Google Cloud
       uses: google-github-actions/auth@v2
       with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
+        credentials_json: ${{ secrets.GCP_SA_KEY_DEV }}
 
     - name: Setup Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v2

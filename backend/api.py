@@ -7,11 +7,64 @@ import re
 import io
 import os
 import json
+import jwt
+import hashlib
+from functools import wraps
 
 app = Flask(__name__, static_folder='frontend/dist', static_url_path='')
 CORS(app)
 
+# 認証設定
+SECRET_KEY = os.environ.get('SECRET_KEY', 'your-secret-key-here')
+users = {
+    'admin': hashlib.sha256('admin123'.encode()).hexdigest(),
+    'user': hashlib.sha256('user123'.encode()).hexdigest()
+}
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'message': 'Token is missing'}), 401
+        
+        try:
+            if token.startswith('Bearer '):
+                token = token[7:]
+            jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        except:
+            return jsonify({'message': 'Token is invalid'}), 401
+        
+        return f(*args, **kwargs)
+    return decorated
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    try:
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+        
+        if not username or not password:
+            return jsonify({'message': 'ユーザー名とパスワードが必要です'}), 400
+        
+        password_hash = hashlib.sha256(password.encode()).hexdigest()
+        
+        if username in users and users[username] == password_hash:
+            token = jwt.encode({
+                'username': username,
+                'exp': datetime.utcnow().timestamp() + 3600  # 1時間有効
+            }, SECRET_KEY, algorithm='HS256')
+            
+            return jsonify({'token': token, 'message': 'ログインに成功しました'})
+        else:
+            return jsonify({'message': 'ユーザー名またはパスワードが間違っています'}), 401
+    
+    except Exception as e:
+        return jsonify({'message': 'サーバーエラーが発生しました'}), 500
+
 @app.route('/edit-csv', methods=['POST'])
+@token_required
 def edit_csv():
     try:
         file = request.files.get('file')
@@ -153,6 +206,7 @@ def calculate_items(item_df, price_df):
     return item_df
 
 @app.route('/check-weights', methods=['POST'])
+@token_required
 def check_weights():
     try:
         file = request.files.get('item_file')
@@ -192,6 +246,7 @@ def check_weights():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/calculate-fixed', methods=['POST'])
+@token_required
 def calculate_fixed():
     try:
         data = request.json

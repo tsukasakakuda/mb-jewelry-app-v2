@@ -8,7 +8,7 @@ on:
 
 env:
   PROJECT_ID: mb-jewelry-dev
-  SERVICE_NAME: mb-jewelry-app-dev
+  SERVICE_NAME: mb-jewelry-dev
   REGION: asia-northeast1
 
 jobs:

@@ -8,7 +8,7 @@ on:
 
 env:
   PROJECT_ID: mb-jewelry-staging
-  SERVICE_NAME: mb-jewelry-app-staging
+  SERVICE_NAME: mb-jewelry-staging
   REGION: asia-northeast1
 
 jobs:

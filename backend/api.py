@@ -38,7 +38,7 @@ def token_required(f):
         return f(*args, **kwargs)
     return decorated
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     try:
         data = request.json
@@ -64,7 +64,7 @@ def login():
     except Exception as e:
         return jsonify({'message': 'サーバーエラーが発生しました'}), 500
 
-@app.route('/edit-csv', methods=['POST'])
+@app.route('/api/edit-csv', methods=['POST'])
 @token_required
 def edit_csv():
     try:
@@ -206,7 +206,7 @@ def calculate_items(item_df, price_df):
     item_df[['jewelry_price', 'material_price', 'total_weight', 'gemstone_weight', 'material_weight']] = item_df.apply(calculate, axis=1)
     return item_df
 
-@app.route('/check-weights', methods=['POST'])
+@app.route('/api/check-weights', methods=['POST'])
 @token_required
 def check_weights():
     try:
@@ -246,7 +246,7 @@ def check_weights():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/calculate-fixed', methods=['POST'])
+@app.route('/api/calculate-fixed', methods=['POST'])
 @token_required
 def calculate_fixed():
     try:

@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.db
+.env
+node_modules/
+frontend/dist
+
+
+# macOS
+.DS_Store
+
+# Flask
+instance/
+*.db
+
+# Docker
+*.log
+
+# VSCode
+.vscode/
+
+# Node modules and frontend artifacts (except dist)
+frontend/node_modules/
+frontend/.vitepress/
+frontend/.output/
+!frontend/dist/index.html
+!frontend/dist/assets/

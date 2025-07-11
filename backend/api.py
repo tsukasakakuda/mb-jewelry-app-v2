@@ -719,14 +719,18 @@ def serve_vue():
     return send_from_directory(app.static_folder, 'index.html')
 
 # SPA用のcatch-allルート（Vue Routerの履歴管理対応）
-@app.route('/<path:path>')
-def catch_all(path):
-    """Vue Router用のcatch-allルート - リロード時のnot found問題を解決"""
-    # APIルートでない場合はindex.htmlを返す
-    if not path.startswith('api/'):
-        return send_from_directory(app.static_folder, 'index.html')
-    # APIルートの場合は404を返す
-    return jsonify({'error': 'API endpoint not found'}), 404
+@app.errorhandler(404)
+def not_found(error):
+    """404エラーハンドラー - Vue Router用のSPA対応"""
+    # リクエストパスを取得
+    path = request.path
+    
+    # APIルートの場合はJSONエラーを返す
+    if path.startswith('/api/') or path.startswith('/api'):
+        return jsonify({'error': 'API endpoint not found'}), 404
+    
+    # その他のルートの場合はindex.htmlを返す（Vue Routerに委ねる）
+    return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))

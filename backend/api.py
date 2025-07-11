@@ -39,6 +39,7 @@ def token_required(f):
     return decorated
 
 @app.route('/api/login', methods=['POST'])
+@app.route('/login', methods=['POST'])  # For local development with Vite proxy
 def login():
     try:
         data = request.json
@@ -65,6 +66,7 @@ def login():
         return jsonify({'message': 'サーバーエラーが発生しました'}), 500
 
 @app.route('/api/edit-csv', methods=['POST'])
+@app.route('/edit-csv', methods=['POST'])  # For local development with Vite proxy
 @token_required
 def edit_csv():
     try:
@@ -207,6 +209,7 @@ def calculate_items(item_df, price_df):
     return item_df
 
 @app.route('/api/check-weights', methods=['POST'])
+@app.route('/check-weights', methods=['POST'])  # For local development with Vite proxy
 @token_required
 def check_weights():
     try:
@@ -247,6 +250,7 @@ def check_weights():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/calculate-fixed', methods=['POST'])
+@app.route('/calculate-fixed', methods=['POST'])  # For local development with Vite proxy
 @token_required
 def calculate_fixed():
     try:

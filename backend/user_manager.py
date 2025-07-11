@@ -322,6 +322,23 @@ class UserManager:
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_role ON users(role)')
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_active ON users(is_active)')
             
+            # 計算履歴テーブル作成
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS calculation_history (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    calculation_name TEXT,
+                    item_count INTEGER,
+                    total_value REAL,
+                    calculation_data TEXT,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (id)
+                )
+            ''')
+            
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_calc_user_id ON calculation_history(user_id)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_calc_created_at ON calculation_history(created_at)')
+            
             # デフォルトユーザー作成
             admin_password_hash = bcrypt.hashpw('admin123'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             user_password_hash = bcrypt.hashpw('user123'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -339,6 +356,7 @@ class UserManager:
             conn.commit()
             print("✅ データベースが初期化されました")
             print("✅ デフォルトユーザーが作成されました (admin/admin123, user/user123)")
+            print("✅ 計算履歴テーブルが作成されました")
             
         except Exception as e:
             print(f"データベース初期化エラー: {e}")

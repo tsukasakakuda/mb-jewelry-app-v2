@@ -11,6 +11,7 @@ import jwt
 import hashlib
 from functools import wraps
 from user_manager import user_manager
+from calculation_manager import calculation_manager
 
 app = Flask(__name__, static_folder='frontend/dist', static_url_path='')
 CORS(app)
@@ -414,6 +415,153 @@ def calculate_fixed():
             download_name=filename_cal
         )
 
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# 計算履歴保存エンドポイント
+@app.route('/api/save-calculation', methods=['POST'])
+@app.route('/save-calculation', methods=['POST'])
+@token_required
+def save_calculation():
+    """計算結果をデータベースに保存"""
+    try:
+        data = request.json
+        if not data:
+            return jsonify({'error': 'No JSON provided'}), 400
+        
+        user_id = request.current_user.get('user_id')
+        calculation_name = data.get('calculation_name', f"計算_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
+        item_data = data.get('item_data', [])
+        calculation_results = data.get('calculation_results', {})
+        
+        if not item_data:
+            return jsonify({'error': 'アイテムデータが必要です'}), 400
+        
+        history_id = calculation_manager.save_calculation(
+            user_id=user_id,
+            calculation_name=calculation_name,
+            item_data=item_data,
+            calculation_results=calculation_results
+        )
+        
+        if history_id:
+            return jsonify({
+                'message': '計算結果が保存されました',
+                'history_id': history_id
+            }), 201
+        else:
+            return jsonify({'error': '計算結果の保存に失敗しました'}), 500
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# 計算履歴一覧取得エンドポイント
+@app.route('/api/calculation-history', methods=['GET'])
+@app.route('/calculation-history', methods=['GET'])
+@token_required
+def get_calculation_history():
+    """ユーザーの計算履歴一覧を取得"""
+    try:
+        user_id = request.current_user.get('user_id')
+        limit = request.args.get('limit', 50, type=int)
+        
+        histories = calculation_manager.get_calculation_history(user_id, limit)
+        return jsonify({'histories': histories})
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# 計算履歴詳細取得エンドポイント
+@app.route('/api/calculation-history/<int:history_id>', methods=['GET'])
+@app.route('/calculation-history/<int:history_id>', methods=['GET'])
+@token_required
+def get_calculation_detail(history_id):
+    """計算履歴の詳細を取得"""
+    try:
+        user_id = request.current_user.get('user_id')
+        
+        detail = calculation_manager.get_calculation_detail(history_id, user_id)
+        if detail:
+            return jsonify(detail)
+        else:
+            return jsonify({'error': '計算履歴が見つかりません'}), 404
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# 計算履歴削除エンドポイント
+@app.route('/api/calculation-history/<int:history_id>', methods=['DELETE'])
+@app.route('/calculation-history/<int:history_id>', methods=['DELETE'])
+@token_required
+def delete_calculation(history_id):
+    """計算履歴を削除"""
+    try:
+        user_id = request.current_user.get('user_id')
+        
+        success = calculation_manager.delete_calculation(history_id, user_id)
+        if success:
+            return jsonify({'message': '計算履歴が削除されました'})
+        else:
+            return jsonify({'error': '計算履歴の削除に失敗しました'}), 404
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# 計算統計取得エンドポイント
+@app.route('/api/calculation-stats', methods=['GET'])
+@app.route('/calculation-stats', methods=['GET'])
+@token_required
+def get_calculation_stats():
+    """ユーザーの計算統計を取得"""
+    try:
+        user_id = request.current_user.get('user_id')
+        
+        stats = calculation_manager.get_user_statistics(user_id)
+        return jsonify(stats)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# 計算履歴からCSVエクスポート
+@app.route('/api/export-calculation/<int:history_id>', methods=['GET'])
+@app.route('/export-calculation/<int:history_id>', methods=['GET'])
+@token_required
+def export_calculation_csv(history_id):
+    """計算履歴をCSVファイルとしてエクスポート"""
+    try:
+        user_id = request.current_user.get('user_id')
+        
+        detail = calculation_manager.get_calculation_detail(history_id, user_id)
+        if not detail:
+            return jsonify({'error': '計算履歴が見つかりません'}), 404
+        
+        # 計算データをDataFrameに変換
+        item_data = detail['calculation_data']['items']
+        df = pd.DataFrame(item_data)
+        
+        # 出力対象のカラムだけに制限
+        output_columns = [
+            'box_id', 'box_no', 'material', 'misc', 'weight',
+            'jewelry_price', 'material_price', 'total_weight',
+            'gemstone_weight', 'material_weight'
+        ]
+        df = df[[col for col in output_columns if col in df.columns]]
+        
+        # CSVをバイトストリームにして返す
+        output = io.StringIO()
+        df.to_csv(output, index=False)
+        output.seek(0)
+        
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        filename = f"{detail['calculation_name']}_{timestamp}.csv"
+        
+        return send_file(
+            io.BytesIO(output.getvalue().encode('utf-8-sig')),
+            mimetype='text/csv',
+            as_attachment=True,
+            download_name=filename
+        )
+        
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

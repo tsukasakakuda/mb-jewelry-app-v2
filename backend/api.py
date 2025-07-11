@@ -604,6 +604,73 @@ def get_calculation_stats():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# 管理者専用: 全DB内容確認
+@app.route('/api/admin/db-content', methods=['GET'])
+@app.route('/admin/db-content', methods=['GET'])
+@token_required
+def admin_view_db_content():
+    """管理者専用: データベースの全内容を確認"""
+    try:
+        # 管理者権限チェック
+        if request.current_user.get('role') != 'admin':
+            return jsonify({'message': '管理者権限が必要です'}), 403
+        
+        import sqlite3
+        from user_manager import DATABASE_PATH
+        
+        conn = sqlite3.connect(DATABASE_PATH)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        # テーブル一覧を取得
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = [row[0] for row in cursor.fetchall()]
+        
+        db_content = {}
+        
+        for table in tables:
+            cursor.execute(f"SELECT * FROM {table}")
+            rows = cursor.fetchall()
+            db_content[table] = [dict(row) for row in rows]
+        
+        conn.close()
+        
+        return jsonify({
+            'tables': tables,
+            'content': db_content,
+            'database_path': DATABASE_PATH
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# 管理者専用: SQLiteファイルをダウンロード
+@app.route('/api/admin/download-db', methods=['GET'])
+@app.route('/admin/download-db', methods=['GET'])
+@token_required
+def admin_download_db():
+    """管理者専用: SQLiteデータベースファイルをダウンロード"""
+    try:
+        # 管理者権限チェック
+        if request.current_user.get('role') != 'admin':
+            return jsonify({'message': '管理者権限が必要です'}), 403
+        
+        from user_manager import DATABASE_PATH
+        import os
+        
+        if not os.path.exists(DATABASE_PATH):
+            return jsonify({'error': 'データベースファイルが見つかりません'}), 404
+        
+        return send_file(
+            DATABASE_PATH,
+            mimetype='application/octet-stream',
+            as_attachment=True,
+            download_name='mb_jewelry_database.db'
+        )
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 # 計算履歴からCSVエクスポート
 @app.route('/api/export-calculation/<int:history_id>', methods=['GET'])
 @app.route('/export-calculation/<int:history_id>', methods=['GET'])
@@ -650,6 +717,16 @@ def export_calculation_csv(history_id):
 @app.route('/')
 def serve_vue():
     return send_from_directory(app.static_folder, 'index.html')
+
+# SPA用のcatch-allルート（Vue Routerの履歴管理対応）
+@app.route('/<path:path>')
+def catch_all(path):
+    """Vue Router用のcatch-allルート - リロード時のnot found問題を解決"""
+    # APIルートでない場合はindex.htmlを返す
+    if not path.startswith('api/'):
+        return send_from_directory(app.static_folder, 'index.html')
+    # APIルートの場合は404を返す
+    return jsonify({'error': 'API endpoint not found'}), 404
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))

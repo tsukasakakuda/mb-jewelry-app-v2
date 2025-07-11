@@ -10,16 +10,15 @@ import json
 import jwt
 import hashlib
 from functools import wraps
+from user_manager import user_manager
 
 app = Flask(__name__, static_folder='frontend/dist', static_url_path='')
 CORS(app)
 
 # 認証設定
 SECRET_KEY = os.environ.get('SECRET_KEY', 'your-secret-key-here')
-users = {
-    'admin': hashlib.sha256('admin123'.encode()).hexdigest(),
-    'user': hashlib.sha256('user123'.encode()).hexdigest()
-}
+
+# 旧方式のユーザー辞書は削除（データベースを使用）
 
 def token_required(f):
     @wraps(f)
@@ -31,7 +30,9 @@ def token_required(f):
         try:
             if token.startswith('Bearer '):
                 token = token[7:]
-            jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+            # トークンからユーザー情報を取得してrequestに設定
+            request.current_user = payload
         except:
             return jsonify({'message': 'Token is invalid'}), 401
         
@@ -49,19 +50,136 @@ def login():
         if not username or not password:
             return jsonify({'message': 'ユーザー名とパスワードが必要です'}), 400
         
-        password_hash = hashlib.sha256(password.encode()).hexdigest()
+        # データベースでユーザー認証
+        user = user_manager.authenticate_user(username, password)
         
-        if username in users and users[username] == password_hash:
+        if user:
             from datetime import datetime, timezone
             token = jwt.encode({
-                'username': username,
+                'user_id': user['id'],
+                'username': user['username'],
+                'role': user['role'],
                 'exp': datetime.now(timezone.utc).timestamp() + 3600  # 1時間有効
             }, SECRET_KEY, algorithm='HS256')
             
-            return jsonify({'token': token, 'message': 'ログインに成功しました'})
+            return jsonify({
+                'token': token, 
+                'message': 'ログインに成功しました',
+                'user': {
+                    'id': user['id'],
+                    'username': user['username'],
+                    'role': user['role']
+                }
+            })
         else:
             return jsonify({'message': 'ユーザー名またはパスワードが間違っています'}), 401
     
+    except Exception as e:
+        return jsonify({'message': 'サーバーエラーが発生しました'}), 500
+
+# ユーザー情報取得エンドポイント
+@app.route('/api/user/profile', methods=['GET'])
+@app.route('/user/profile', methods=['GET'])
+@token_required
+def get_user_profile():
+    """現在のユーザー情報を取得"""
+    try:
+        user_id = request.current_user.get('user_id')
+        user = user_manager.get_user_by_id(user_id)
+        
+        if user:
+            return jsonify({
+                'user': {
+                    'id': user['id'],
+                    'username': user['username'],
+                    'email': user['email'],
+                    'role': user['role'],
+                    'created_at': user['created_at']
+                }
+            })
+        else:
+            return jsonify({'message': 'ユーザーが見つかりません'}), 404
+            
+    except Exception as e:
+        return jsonify({'message': 'サーバーエラーが発生しました'}), 500
+
+# パスワード変更エンドポイント
+@app.route('/api/user/change-password', methods=['POST'])
+@app.route('/user/change-password', methods=['POST'])
+@token_required
+def change_password():
+    """パスワード変更"""
+    try:
+        data = request.json
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
+        
+        if not current_password or not new_password:
+            return jsonify({'message': '現在のパスワードと新しいパスワードが必要です'}), 400
+        
+        user_id = request.current_user.get('user_id')
+        username = request.current_user.get('username')
+        
+        # 現在のパスワードを確認
+        if not user_manager.authenticate_user(username, current_password):
+            return jsonify({'message': '現在のパスワードが間違っています'}), 400
+        
+        # パスワード更新
+        if user_manager.update_password(user_id, new_password):
+            return jsonify({'message': 'パスワードが正常に更新されました'})
+        else:
+            return jsonify({'message': 'パスワードの更新に失敗しました'}), 500
+            
+    except Exception as e:
+        return jsonify({'message': 'サーバーエラーが発生しました'}), 500
+
+# 管理者専用: ユーザー一覧取得
+@app.route('/api/admin/users', methods=['GET'])
+@app.route('/admin/users', methods=['GET'])
+@token_required
+def admin_list_users():
+    """管理者専用: ユーザー一覧取得"""
+    try:
+        # 管理者権限チェック
+        if request.current_user.get('role') != 'admin':
+            return jsonify({'message': '管理者権限が必要です'}), 403
+        
+        users = user_manager.list_users(active_only=False)
+        return jsonify({'users': users})
+        
+    except Exception as e:
+        return jsonify({'message': 'サーバーエラーが発生しました'}), 500
+
+# 管理者専用: ユーザー作成
+@app.route('/api/admin/users', methods=['POST'])
+@app.route('/admin/users', methods=['POST'])
+@token_required
+def admin_create_user():
+    """管理者専用: 新しいユーザーを作成"""
+    try:
+        # 管理者権限チェック
+        if request.current_user.get('role') != 'admin':
+            return jsonify({'message': '管理者権限が必要です'}), 403
+        
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+        email = data.get('email')
+        role = data.get('role', 'user')
+        
+        if not username or not password:
+            return jsonify({'message': 'ユーザー名とパスワードが必要です'}), 400
+        
+        user_id = user_manager.create_user(username, password, email, role)
+        
+        if user_id:
+            return jsonify({
+                'message': 'ユーザーが正常に作成されました',
+                'user_id': user_id
+            }), 201
+        else:
+            return jsonify({'message': 'ユーザーの作成に失敗しました'}), 400
+            
     except Exception as e:
         return jsonify({'message': 'サーバーエラーが発生しました'}), 500
 

@@ -299,13 +299,13 @@ export default {
           priceDataCount: this.priceData.length
         });
 
-        // 計算処理を実行してアイテムデータに計算結果を追加
+        // 既存のAPIエンドポイントにJSONフォーマットパラメータを付けて計算結果を取得
         const payload = {
           item_data: mergedItems,
           price_data: this.priceData
         };
 
-        const calcRes = await fetch('/api/calculate-fixed', {
+        const calcRes = await fetch('/api/calculate-fixed?format=json', {
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
@@ -320,32 +320,10 @@ export default {
           throw new Error(`計算処理に失敗しました: ${calcRes.status}`);
         }
 
-        // Note: /api/calculate-fixed returns CSV, but we need the calculated data
-        // Let's modify the approach to calculate locally first
+        const calcData = await calcRes.json();
+        const calculatedItems = calcData.calculated_items;
         
-        // 実際の計算データを使用（既に計算済みの場合）
-        let calculatedItems = mergedItems;
-        let totalValue = 0;
-        
-        // もし計算結果がない場合は、簡易計算を実行
-        if (!mergedItems[0]?.jewelry_price) {
-          console.log("Performing simple calculation for items without jewelry_price");
-          calculatedItems = mergedItems.map(item => {
-            const weight = parseFloat(item.weight?.toString().replace(/[^\d.]/g, '') || '0');
-            const estimatedPrice = weight * 5000; // 簡易計算：1gあたり5000円
-            
-            return {
-              ...item,
-              jewelry_price: estimatedPrice,
-              total_weight: weight,
-              material_price: 5000,
-              gemstone_weight: 0,
-              material_weight: weight
-            };
-          });
-        }
-        
-        totalValue = calculatedItems.reduce((sum, item) => {
+        const totalValue = calculatedItems.reduce((sum, item) => {
           const price = parseFloat(item.jewelry_price || '0');
           return sum + price;
         }, 0);

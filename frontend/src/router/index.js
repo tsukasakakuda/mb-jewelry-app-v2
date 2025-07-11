@@ -4,6 +4,7 @@ import MainMenu from '@/views/MainMenu.vue';
 import LoginPage from '@/views/LoginPage.vue';
 import CsvEditorPage from '@/views/CsvEditorPage.vue';
 import MetalCalculatePage from '@/views/MetalCalculatePage.vue';
+import CalculationHistoryPage from '@/views/CalculationHistoryPage.vue';
 import { isAuthenticated } from '@/utils/auth.js';
 
 const routes = [
@@ -11,7 +12,8 @@ const routes = [
   { path: '/calculate', name: 'MetalCalculatePage', component: MetalCalculatePage, meta: { requiresAuth: true } },
   //{ path: '/calculate', name: 'UploadForm', component: UploadForm },
   { path: '/login', name: 'LoginPage', component: LoginPage },
-  { path: '/csv', name: 'CsvEditor', component: CsvEditorPage, meta: { requiresAuth: true } }
+  { path: '/csv', name: 'CsvEditor', component: CsvEditorPage, meta: { requiresAuth: true } },
+  { path: '/history', name: 'CalculationHistory', component: CalculationHistoryPage, meta: { requiresAuth: true } }
 ];
 
 const router = createRouter({

@@ -105,6 +105,19 @@
                 <span class="font-medium">CSV加工</span>
               </router-link>
             </li>
+            <li>
+              <router-link 
+                to="/history" 
+                @click="closeMenu"
+                class="nav-link group flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-all duration-200"
+                :class="{ 'bg-blue-100 text-blue-700': $route.path === '/history' }"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span class="font-medium">計算履歴</span>
+              </router-link>
+            </li>
           </ul>
         </nav>
 
@@ -196,6 +209,23 @@
                 <div>
                   <span class="font-medium">CSV加工</span>
                   <p class="text-gray-500 text-xs mt-1">データ処理ツール</p>
+                </div>
+              </router-link>
+            </li>
+            <li>
+              <router-link 
+                to="/history" 
+                class="nav-link group flex items-center space-x-4 p-4 rounded-xl text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-all duration-200 border border-transparent hover:border-gray-300"
+                :class="{ 'bg-blue-100 text-blue-700 border-blue-200': $route.path === '/history' }"
+              >
+                <div class="flex items-center justify-center w-10 h-10 bg-red-100 rounded-lg group-hover:bg-red-200 transition-colors">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </div>
+                <div>
+                  <span class="font-medium">計算履歴</span>
+                  <p class="text-gray-500 text-xs mt-1">計算結果の管理</p>
                 </div>
               </router-link>
             </li>

@@ -42,7 +42,7 @@
       </div>
 
       <!-- Menu Cards -->
-      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         <!-- Metal Calculator Card -->
         <div class="menu-card group">
           <router-link to="/calculate" class="block">
@@ -81,6 +81,27 @@
               <p class="text-gray-600 mb-4">在庫データや価格リストを効率的に加工・分析</p>
               <div class="flex items-center text-green-600 group-hover:text-green-700 transition-colors">
                 <span class="mr-2">ツールを開く</span>
+                <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+            </div>
+          </router-link>
+        </div>
+
+        <!-- Calculation History Card -->
+        <div class="menu-card group">
+          <router-link to="/history" class="block">
+            <div class="card-inner backdrop-blur-sm bg-white/80 border border-gray-200 rounded-2xl p-8 hover:bg-white/90 transition-all duration-300 hover:shadow-2xl hover:border-gray-300">
+              <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-500 to-red-600 rounded-xl mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-800 mb-3">計算履歴</h3>
+              <p class="text-gray-600 mb-4">過去の計算結果を確認・管理・再利用</p>
+              <div class="flex items-center text-red-600 group-hover:text-red-700 transition-colors">
+                <span class="mr-2">履歴を確認</span>
                 <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
                 </svg>

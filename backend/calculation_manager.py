@@ -40,16 +40,30 @@ class CalculationManager:
         cursor = conn.cursor()
         
         try:
+            print(f"📊 Saving calculation for user {user_id}: {calculation_name}")
+            print(f"📋 Item count: {len(item_data)}")
+            print(f"💰 Results: {calculation_results}")
+            
             # 計算データをJSON形式で保存
             calculation_data = {
                 'items': item_data,
                 'results': calculation_results,
                 'summary': {
                     'item_count': len(item_data),
-                    'total_value': sum(item.get('jewelry_price', 0) for item in item_data),
-                    'total_weight': sum(item.get('total_weight', 0) for item in item_data)
+                    'total_value': sum(float(item.get('jewelry_price', 0)) for item in item_data),
+                    'total_weight': sum(float(item.get('total_weight', 0)) for item in item_data)
                 }
             }
+            
+            print(f"📦 Calculation data summary: {calculation_data['summary']}")
+            
+            # JSONシリアライズテスト
+            try:
+                json_str = json.dumps(calculation_data, ensure_ascii=False, indent=2, default=str)
+                print(f"✅ JSON serialization successful, length: {len(json_str)}")
+            except Exception as json_error:
+                print(f"❌ JSON serialization failed: {json_error}")
+                raise json_error
             
             cursor.execute('''
                 INSERT INTO calculation_history 
@@ -60,7 +74,7 @@ class CalculationManager:
                 calculation_name,
                 calculation_data['summary']['item_count'],
                 calculation_data['summary']['total_value'],
-                json.dumps(calculation_data, ensure_ascii=False, indent=2)
+                json_str
             ))
             
             history_id = cursor.lastrowid

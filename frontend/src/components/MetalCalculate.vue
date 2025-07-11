@@ -74,6 +74,42 @@
         </form>
       </div>
 
+      <!-- Success Message Section -->
+      <div v-if="showSuccessMessage" class="backdrop-blur-sm bg-white/90 border border-green-200 rounded-3xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/95">
+        <h2 class="text-xl font-semibold text-green-600 mb-6 flex items-center">
+          <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/>
+          </svg>
+          エラーがありませんでした
+        </h2>
+        
+        <div class="flex flex-col sm:flex-row gap-4 mt-6">
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 mb-2">計算名（DB保存時）</label>
+            <input
+              v-model="calculationName"
+              type="text"
+              placeholder="計算名を入力（例：2025年1月分）"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-800 placeholder-gray-500"
+            />
+          </div>
+          <div class="flex gap-3">
+            <button
+              @click="submitFixedData"
+              class="submit-button py-3 px-6 rounded-xl font-medium text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-transparent transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+            >
+              CSVダウンロード
+            </button>
+            <button
+              @click="saveToDatabase"
+              class="submit-button py-3 px-6 rounded-xl font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-transparent transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+            >
+              DB保存
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Data Correction Section -->
       <div v-if="invalidWeights.length" class="backdrop-blur-sm bg-white/90 border border-gray-200 rounded-3xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/95">
         <h2 class="text-xl font-semibold text-red-600 mb-6 flex items-center">
@@ -152,6 +188,7 @@ export default {
       allItems: [],
       validItems: [],
       calculationName: '',
+      showSuccessMessage: false,
       baseURL: import.meta.env.VITE_API_BASE,
     };
   },
@@ -178,6 +215,10 @@ export default {
         alert("両方のCSVファイルを選択してください");
         return;
       }
+
+      // 状態をリセット
+      this.invalidWeights = [];
+      this.showSuccessMessage = false;
 
       const formData = new FormData();
       formData.append("item_file", this.itemFile);
@@ -226,7 +267,8 @@ export default {
         console.log("Invalid weights data:", this.invalidWeights);
 
         if (this.invalidWeights.length === 0) {
-          this.submitFixedData();
+          // エラーがない場合は成功メッセージを表示
+          this.showSuccessMessage = true;
         }
       } catch (err) {
         console.error("checkWeightsエラー:", err);
@@ -376,8 +418,9 @@ export default {
         console.log("Save success:", saveData);
         alert(`計算結果が保存されました (ID: ${saveData.history_id})`);
         
-        // 計算名をクリア
+        // 計算名をクリアして成功メッセージを非表示
         this.calculationName = '';
+        this.showSuccessMessage = false;
         
       } catch (err) {
         console.error("saveToDatabase エラー:", err);

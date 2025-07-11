@@ -19,9 +19,10 @@ class UserManager:
         self._ensure_database_exists()
     
     def _ensure_database_exists(self):
-        """データベースファイルの存在確認"""
+        """データベースファイルの存在確認と自動作成"""
         if not os.path.exists(self.db_path):
-            raise FileNotFoundError(f"データベースファイルが見つかりません: {self.db_path}")
+            print(f"データベースファイルが見つかりません。新規作成します: {self.db_path}")
+            self._initialize_database()
     
     def _get_connection(self):
         """データベース接続を取得"""
@@ -293,6 +294,56 @@ class UserManager:
         except Exception as e:
             print(f"ユーザー一覧取得エラー: {e}")
             return []
+        finally:
+            conn.close()
+    
+    def _initialize_database(self):
+        """データベースを初期化"""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        
+        try:
+            # ユーザーテーブル作成
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT UNIQUE NOT NULL,
+                    password_hash TEXT NOT NULL,
+                    email TEXT,
+                    role TEXT DEFAULT 'user',
+                    is_active BOOLEAN DEFAULT 1,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
+            
+            # インデックス作成
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_username ON users(username)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_role ON users(role)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_active ON users(is_active)')
+            
+            # デフォルトユーザー作成
+            admin_password_hash = bcrypt.hashpw('admin123'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            user_password_hash = bcrypt.hashpw('user123'.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            
+            cursor.execute('''
+                INSERT OR IGNORE INTO users (username, password_hash, email, role, is_active, created_at, updated_at)
+                VALUES (?, ?, ?, 'admin', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            ''', ('admin', admin_password_hash, None))
+            
+            cursor.execute('''
+                INSERT OR IGNORE INTO users (username, password_hash, email, role, is_active, created_at, updated_at)
+                VALUES (?, ?, ?, 'user', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            ''', ('user', user_password_hash, None))
+            
+            conn.commit()
+            print("✅ データベースが初期化されました")
+            print("✅ デフォルトユーザーが作成されました (admin/admin123, user/user123)")
+            
+        except Exception as e:
+            print(f"データベース初期化エラー: {e}")
+            conn.rollback()
+            raise
         finally:
             conn.close()
 

@@ -3,23 +3,23 @@
     <div class="max-w-4xl mx-auto space-y-6">
       <!-- Page Header -->
       <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mb-4 shadow-lg">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-4 shadow-lg">
           <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z"/>
           </svg>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-2 tracking-wide">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2 tracking-wide">
           地金自動計算
         </h1>
-        <p class="text-white/70 text-sm">金属の価格を自動で計算します</p>
+        <p class="text-gray-600 text-sm">金属の価格を自動で計算します</p>
       </div>
 
       <!-- Main Form Card -->
-      <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 transition-all duration-300 hover:shadow-3xl hover:bg-white/15">
+      <div class="backdrop-blur-sm bg-white/90 border border-gray-200 rounded-3xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/95">
         <form @submit.prevent="checkWeights" class="space-y-6">
           <!-- Item CSV Upload -->
           <div class="file-upload-group">
-            <label class="block font-semibold text-white/90 mb-3 text-lg">item_csv</label>
+            <label class="block font-semibold text-gray-800 mb-3 text-lg">item_csv</label>
             <div class="file-upload-container">
               <input
                 type="file"
@@ -30,18 +30,18 @@
                 id="itemFile"
               />
               <label for="itemFile" class="file-upload-label">
-                <svg class="w-8 h-8 text-white/70 mb-2" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-8 h-8 text-gray-600 mb-2" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                 </svg>
-                <span class="text-white/90 font-medium">{{ itemFile ? itemFile.name : 'アイテムCSVを選択' }}</span>
-                <span class="text-white/60 text-sm block mt-1">計算対象のアイテムデータ</span>
+                <span class="text-gray-800 font-medium">{{ itemFile ? itemFile.name : 'アイテムCSVを選択' }}</span>
+                <span class="text-gray-600 text-sm block mt-1">計算対象のアイテムデータ</span>
               </label>
             </div>
           </div>
           
           <!-- Price CSV Upload -->
           <div class="file-upload-group">
-            <label class="block font-semibold text-white/90 mb-3 text-lg">price_csv</label>
+            <label class="block font-semibold text-gray-800 mb-3 text-lg">price_csv</label>
             <div class="file-upload-container">
               <input
                 type="file"
@@ -52,11 +52,11 @@
                 id="priceFile"
               />
               <label for="priceFile" class="file-upload-label">
-                <svg class="w-8 h-8 text-white/70 mb-2" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-8 h-8 text-gray-600 mb-2" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M7,15H9C9,16.08 10.37,17 12,17C13.63,17 15,16.08 15,15C15,13.9 13.96,13.5 11.76,12.97C9.64,12.44 7,11.78 7,9C7,7.21 8.47,5.69 10.5,5.18V3H13.5V5.18C15.53,5.69 17,7.21 17,9H15C15,7.92 13.63,7 12,7C10.37,7 9,7.92 9,9C9,10.1 10.04,10.5 12.24,11.03C14.36,11.56 17,12.22 17,15C17,16.79 15.53,18.31 13.5,18.82V21H10.5V18.82C8.47,18.31 7,16.79 7,15Z"/>
                 </svg>
-                <span class="text-white/90 font-medium">{{ priceFile ? priceFile.name : '価格CSVを選択' }}</span>
-                <span class="text-white/60 text-sm block mt-1">素材の価格データ</span>
+                <span class="text-gray-800 font-medium">{{ priceFile ? priceFile.name : '価格CSVを選択' }}</span>
+                <span class="text-gray-600 text-sm block mt-1">素材の価格データ</span>
               </label>
             </div>
           </div>
@@ -66,7 +66,7 @@
             <button
               type="submit"
               :disabled="!itemFile || !priceFile"
-              class="submit-button w-full py-3 px-6 rounded-xl font-medium text-white bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+              class="submit-button w-full py-3 px-6 rounded-xl font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
             >
               アップロードしてチェック
             </button>
@@ -75,8 +75,8 @@
       </div>
 
       <!-- Data Correction Section -->
-      <div v-if="invalidWeights.length" class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 transition-all duration-300 hover:shadow-3xl hover:bg-white/15">
-        <h2 class="text-xl font-semibold text-red-400 mb-6 flex items-center">
+      <div v-if="invalidWeights.length" class="backdrop-blur-sm bg-white/90 border border-gray-200 rounded-3xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/95">
+        <h2 class="text-xl font-semibold text-red-600 mb-6 flex items-center">
           <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/>
           </svg>
@@ -86,24 +86,24 @@
         <div class="overflow-x-auto">
           <table class="w-full text-sm border-collapse">
             <thead>
-              <tr class="bg-white/5">
-                <th class="border border-white/20 px-3 py-2 text-white/90 font-medium">box_id</th>
-                <th class="border border-white/20 px-3 py-2 text-white/90 font-medium">box_no</th>
-                <th class="border border-white/20 px-3 py-2 text-white/90 font-medium">material</th>
-                <th class="border border-white/20 px-3 py-2 text-white/90 font-medium">misc</th>
-                <th class="border border-white/20 px-3 py-2 text-white/90 font-medium">weight（修正可）</th>
+              <tr class="bg-gray-100">
+                <th class="border border-gray-300 px-3 py-2 text-gray-800 font-medium">box_id</th>
+                <th class="border border-gray-300 px-3 py-2 text-gray-800 font-medium">box_no</th>
+                <th class="border border-gray-300 px-3 py-2 text-gray-800 font-medium">material</th>
+                <th class="border border-gray-300 px-3 py-2 text-gray-800 font-medium">misc</th>
+                <th class="border border-gray-300 px-3 py-2 text-gray-800 font-medium">weight（修正可）</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, idx) in invalidWeights" :key="idx" class="hover:bg-white/5">
-                <td class="border border-white/20 px-3 py-2 text-white/80">{{ item.box_id }}</td>
-                <td class="border border-white/20 px-3 py-2 text-white/80">{{ item.box_no }}</td>
-                <td class="border border-white/20 px-3 py-2 text-white/80">{{ item.row_data.material }}</td>
-                <td class="border border-white/20 px-3 py-2 text-white/80">{{ item.row_data.misc }}</td>
-                <td class="border border-white/20 px-3 py-2">
+              <tr v-for="(item, idx) in invalidWeights" :key="idx" class="hover:bg-gray-50">
+                <td class="border border-gray-300 px-3 py-2 text-gray-700">{{ item.box_id }}</td>
+                <td class="border border-gray-300 px-3 py-2 text-gray-700">{{ item.box_no }}</td>
+                <td class="border border-gray-300 px-3 py-2 text-gray-700">{{ item.row_data.material }}</td>
+                <td class="border border-gray-300 px-3 py-2 text-gray-700">{{ item.row_data.misc }}</td>
+                <td class="border border-gray-300 px-3 py-2">
                   <input 
                     v-model="item.row_data.weight" 
-                    class="w-full px-2 py-1 bg-white/10 border border-white/30 rounded-md text-white focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/20" 
+                    class="w-full px-2 py-1 bg-white border border-gray-300 rounded-md text-gray-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20" 
                   />
                 </td>
               </tr>
@@ -114,7 +114,7 @@
         <div class="text-right mt-6">
           <button
             @click="submitFixedData"
-            class="submit-button py-3 px-6 rounded-xl font-medium text-white bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-transparent transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+            class="submit-button py-3 px-6 rounded-xl font-medium text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-transparent transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
           >
             修正して再計算（CSVダウンロード）
           </button>
@@ -284,17 +284,17 @@ export default {
   width: 100%;
   min-height: 120px;
   padding: 2rem;
-  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border: 2px dashed rgb(209, 213, 219);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .file-upload-label:hover {
-  border-color: rgba(255, 193, 7, 0.6);
-  background: rgba(255, 193, 7, 0.1);
+  border-color: rgb(59, 130, 246);
+  background: rgba(59, 130, 246, 0.1);
   transform: translateY(-2px);
 }
 

@@ -1,24 +1,24 @@
 <template>
   <div class="min-h-screen flex items-center justify-center relative overflow-hidden">
-    <!-- Animated Background -->
-    <div class="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <!-- Clean Background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200">
       <div class="absolute inset-0 login-pattern-bg"></div>
-      <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-20 blur-3xl animate-pulse"></div>
-      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full opacity-15 blur-3xl animate-pulse delay-1000"></div>
+      <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full opacity-10 blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-green-400 to-green-500 rounded-full opacity-8 blur-3xl animate-pulse delay-1000"></div>
     </div>
 
     <!-- Login Card -->
     <div class="relative z-10 w-full max-w-md mx-4">
-      <div class="login-card backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 transition-all duration-300 hover:shadow-3xl hover:bg-white/15">
+      <div class="login-card backdrop-blur-sm bg-white/90 border border-gray-200 rounded-3xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/95">
         <!-- Logo/Brand -->
         <div class="text-center mb-8">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mb-4 shadow-lg">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mb-4 shadow-lg">
             <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 21.5c-5.24 0-9.5-4.26-9.5-9.5S6.76 2.5 12 2.5s9.5 4.26 9.5 9.5-4.26 9.5-9.5 9.5z"/>
             </svg>
           </div>
-          <h1 class="text-3xl font-bold text-white mb-2 tracking-wide">MB Jewelry</h1>
-          <p class="text-white/70 text-sm">プロフェッショナルツールへようこそ</p>
+          <h1 class="text-3xl font-bold text-gray-800 mb-2 tracking-wide">MB Jewelry</h1>
+          <p class="text-gray-600 text-sm">プロフェッショナルツールへようこそ</p>
         </div>
 
         <!-- Login Form -->
@@ -66,7 +66,7 @@
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                 </svg>
               </div>
-              <span class="ml-2 text-sm text-white/80">ログイン状態を保持する</span>
+              <span class="ml-2 text-sm text-gray-600">ログイン状態を保持する</span>
             </label>
           </div>
 
@@ -74,7 +74,7 @@
           <button
             type="submit"
             :disabled="isLoading"
-            class="login-button w-full py-3 px-4 rounded-xl font-medium text-white bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+            class="login-button w-full py-3 px-4 rounded-xl font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
           >
             <span v-if="isLoading" class="flex items-center justify-center">
               <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -92,7 +92,7 @@
               <svg class="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-red-100 text-sm">{{ errorMessage }}</span>
+              <span class="text-red-700 text-sm">{{ errorMessage }}</span>
             </div>
           </div>
         </form>
@@ -221,20 +221,20 @@ export default {
 .floating-label-input {
   width: 100%;
   padding: 12px 16px 12px 16px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgb(209, 213, 219);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
-  color: white;
+  color: rgb(55, 65, 81);
   font-size: 16px;
   transition: all 0.3s ease;
   outline: none;
 }
 
 .floating-label-input:focus {
-  border-color: rgba(255, 193, 7, 0.8);
-  background: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+  border-color: rgb(59, 130, 246);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .floating-label-input.has-content {
@@ -246,7 +246,7 @@ export default {
   position: absolute;
   left: 16px;
   top: 14px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgb(107, 114, 128);
   font-size: 16px;
   transition: all 0.3s ease;
   pointer-events: none;
@@ -256,7 +256,7 @@ export default {
 .floating-label-input:focus + .floating-label,
 .floating-label-input.has-content + .floating-label {
   transform: translateY(-8px) scale(0.75);
-  color: rgba(255, 193, 7, 0.9);
+  color: rgb(59, 130, 246);
 }
 
 .floating-label-input::placeholder {
@@ -264,7 +264,7 @@ export default {
 }
 
 .floating-label-input:focus::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(107, 114, 128, 0.5);
 }
 
 .custom-checkbox {
@@ -273,20 +273,20 @@ export default {
   justify-content: center;
   width: 20px;
   height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgb(209, 213, 219);
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.8);
   transition: all 0.2s ease;
 }
 
 .custom-checkbox:hover {
-  border-color: rgba(255, 193, 7, 0.6);
-  background: rgba(255, 193, 7, 0.1);
+  border-color: rgb(59, 130, 246);
+  background: rgba(59, 130, 246, 0.1);
 }
 
 input[type="checkbox"]:checked + .custom-checkbox {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-  border-color: #f59e0b;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-color: #2563eb;
 }
 
 .login-button {

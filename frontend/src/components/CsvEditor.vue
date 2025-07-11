@@ -3,23 +3,23 @@
     <div class="max-w-2xl mx-auto space-y-6">
       <!-- Page Header -->
       <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mb-4 shadow-lg">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full mb-4 shadow-lg">
           <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
           </svg>
         </div>
-        <h1 class="text-3xl font-bold text-white mb-2 tracking-wide">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2 tracking-wide">
           CSV 編集ツール
         </h1>
-        <p class="text-white/70 text-sm">データの編集と変換を行います</p>
+        <p class="text-gray-600 text-sm">データの編集と変換を行います</p>
       </div>
 
       <!-- Main Form Card -->
-      <div class="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 transition-all duration-300 hover:shadow-3xl hover:bg-white/15">
+      <div class="backdrop-blur-sm bg-white/90 border border-gray-200 rounded-3xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl hover:bg-white/95">
         <form @submit.prevent="submitCsv" class="space-y-6">
           <!-- File Upload Section -->
           <div class="file-upload-group">
-            <label class="block font-semibold text-white/90 mb-3 text-lg">CSVファイル</label>
+            <label class="block font-semibold text-gray-800 mb-3 text-lg">CSVファイル</label>
             <div class="file-upload-container">
               <input
                 type="file"
@@ -30,11 +30,11 @@
                 id="csvFile"
               />
               <label for="csvFile" class="file-upload-label">
-                <svg class="w-8 h-8 text-white/70 mb-2" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-8 h-8 text-gray-600 mb-2" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                 </svg>
-                <span class="text-white/90 font-medium">{{ selectedFile ? selectedFile.name : 'ファイルを選択' }}</span>
-                <span class="text-white/60 text-sm block mt-1">CSVファイルをアップロード</span>
+                <span class="text-gray-800 font-medium">{{ selectedFile ? selectedFile.name : 'ファイルを選択' }}</span>
+                <span class="text-gray-600 text-sm block mt-1">CSVファイルをアップロード</span>
               </label>
             </div>
           </div>
@@ -44,7 +44,7 @@
             <button
               type="submit"
               :disabled="!selectedFile"
-              class="submit-button w-full py-3 px-6 rounded-xl font-medium text-white bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+              class="submit-button w-full py-3 px-6 rounded-xl font-medium text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
             >
               編集してダウンロード
             </button>
@@ -138,17 +138,17 @@ export default {
   width: 100%;
   min-height: 120px;
   padding: 2rem;
-  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border: 2px dashed rgb(209, 213, 219);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .file-upload-label:hover {
-  border-color: rgba(255, 193, 7, 0.6);
-  background: rgba(255, 193, 7, 0.1);
+  border-color: rgb(34, 197, 94);
+  background: rgba(34, 197, 94, 0.1);
   transform: translateY(-2px);
 }
 

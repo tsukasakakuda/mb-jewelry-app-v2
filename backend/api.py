@@ -401,19 +401,79 @@ def calculate_fixed():
         ]
         result_df = result_df[[col for col in output_columns if col in result_df.columns]]
 
-        output = io.StringIO()
-        result_df.to_csv(output, index=False)
-        output.seek(0)
+        # クエリパラメータで戻り値形式を選択
+        return_format = request.args.get('format', 'csv')
+        
+        if return_format == 'json':
+            # JSONで計算結果を返す（DB保存用）
+            calculated_items = result_df.to_dict('records')
+            return jsonify({
+                'calculated_items': calculated_items,
+                'total_items': len(calculated_items),
+                'total_value': sum(float(item.get('jewelry_price', 0)) for item in calculated_items)
+            })
+        else:
+            # CSV形式で返す（既存の動作）
+            output = io.StringIO()
+            result_df.to_csv(output, index=False)
+            output.seek(0)
 
-        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        filename_cal = f"calculated_result_{timestamp}.csv"
+            timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            filename_cal = f"calculated_result_{timestamp}.csv"
 
-        return send_file(
-            io.BytesIO(output.getvalue().encode('utf-8-sig')),
-            mimetype='text/csv',
-            as_attachment=True,
-            download_name=filename_cal
-        )
+            return send_file(
+                io.BytesIO(output.getvalue().encode('utf-8-sig')),
+                mimetype='text/csv',
+                as_attachment=True,
+                download_name=filename_cal
+            )
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# 計算結果をJSONで返すエンドポイント（DB保存用）
+@app.route('/api/calculate-for-save', methods=['POST'])
+@app.route('/calculate-for-save', methods=['POST'])
+@token_required
+def calculate_for_save():
+    """計算結果をJSONで返す（DB保存専用）"""
+    try:
+        data = request.json
+        if not data:
+            return jsonify({'error': 'No JSON provided'}), 400
+
+        item_df = pd.DataFrame(data.get('item_data', []))
+        price_df = pd.DataFrame(data.get('price_data', []))
+
+        for idx, row in item_df.iterrows():
+            if 'weight' in row and str(row['weight']).strip() == "":
+                item_df.at[idx, 'weight'] = None
+
+        required_columns = ['box_id', 'box_no', 'material', 'misc', 'weight']
+        item_df = ensure_required_columns(item_df, required_columns)
+
+        result_df = calculate_items(item_df, price_df)
+
+        result_df['box_no'] = pd.to_numeric(result_df['box_no'], errors='coerce').fillna(0).astype(int)
+        result_df['box_id'] = pd.to_numeric(result_df['box_id'], errors='coerce').fillna(0).astype(int)
+        result_df = result_df.sort_values(by=['box_id', 'box_no'])
+
+        # 出力対象のカラムだけに制限
+        output_columns = [
+            'box_id', 'box_no', 'material', 'misc', 'weight',
+            'jewelry_price', 'material_price', 'total_weight',
+            'gemstone_weight', 'material_weight'
+        ]
+        result_df = result_df[[col for col in output_columns if col in result_df.columns]]
+
+        # DataFrameを辞書のリストに変換
+        calculated_items = result_df.to_dict('records')
+        
+        return jsonify({
+            'calculated_items': calculated_items,
+            'total_items': len(calculated_items),
+            'total_value': sum(float(item.get('jewelry_price', 0)) for item in calculated_items)
+        })
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

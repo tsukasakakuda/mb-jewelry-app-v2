@@ -425,18 +425,34 @@ def calculate_fixed():
 def save_calculation():
     """計算結果をデータベースに保存"""
     try:
+        print("=== Save Calculation API Called ===")
         data = request.json
+        print(f"Request data: {data}")
+        
         if not data:
+            print("Error: No JSON provided")
             return jsonify({'error': 'No JSON provided'}), 400
         
         user_id = request.current_user.get('user_id')
+        print(f"User ID: {user_id}")
+        
         calculation_name = data.get('calculation_name', f"計算_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
         item_data = data.get('item_data', [])
         calculation_results = data.get('calculation_results', {})
         
+        print(f"Calculation name: {calculation_name}")
+        print(f"Item data count: {len(item_data)}")
+        print(f"Calculation results: {calculation_results}")
+        
         if not item_data:
+            print("Error: No item data provided")
             return jsonify({'error': 'アイテムデータが必要です'}), 400
         
+        if not user_id:
+            print("Error: No user_id in token")
+            return jsonify({'error': 'ユーザーIDが見つかりません'}), 400
+        
+        print("Calling calculation_manager.save_calculation...")
         history_id = calculation_manager.save_calculation(
             user_id=user_id,
             calculation_name=calculation_name,
@@ -444,15 +460,21 @@ def save_calculation():
             calculation_results=calculation_results
         )
         
+        print(f"Save result: history_id = {history_id}")
+        
         if history_id:
             return jsonify({
                 'message': '計算結果が保存されました',
                 'history_id': history_id
             }), 201
         else:
+            print("Error: calculation_manager.save_calculation returned None")
             return jsonify({'error': '計算結果の保存に失敗しました'}), 500
             
     except Exception as e:
+        print(f"Exception in save_calculation: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 # 計算履歴一覧取得エンドポイント

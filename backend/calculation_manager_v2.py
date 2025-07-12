@@ -40,7 +40,7 @@ class CalculationManager:
                 'results': calculation_results,
                 'summary': {
                     'total_value': calculation_results.get('total_value', 0),
-                    'total_weight': sum(float(item.get('weight', 0)) for item in item_data),
+                    'total_weight': sum(self._parse_weight(item.get('weight', 0)) for item in item_data),
                     'item_count': len(item_data)
                 }
             }
@@ -271,3 +271,30 @@ class CalculationManager:
                 'total_value': 0.0,
                 'total_items': 0
             }
+    
+    def _parse_weight(self, weight_value) -> float:
+        """
+        重量値を安全にfloatに変換
+        
+        Args:
+            weight_value: 重量値（文字列または数値）
+            
+        Returns:
+            float形式の重量値
+        """
+        try:
+            if isinstance(weight_value, (int, float)):
+                return float(weight_value)
+            elif isinstance(weight_value, str):
+                # 文字列から数値部分を抽出（例: '11.3g' -> 11.3）
+                import re
+                match = re.search(r'(\d+\.?\d*)', weight_value)
+                if match:
+                    return float(match.group(1))
+                else:
+                    return 0.0
+            else:
+                return 0.0
+        except (ValueError, TypeError):
+            print(f"⚠️ 重量値の変換に失敗しました: {weight_value}")
+            return 0.0

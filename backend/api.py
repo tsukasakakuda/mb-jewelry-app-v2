@@ -561,10 +561,15 @@ def get_calculation_history():
         user_id = request.current_user.get('user_id')
         limit = request.args.get('limit', 50, type=int)
         
+        print(f"📋 計算履歴取得開始 - User ID: {user_id}, Limit: {limit}")
         histories = calculation_manager.get_calculation_history(user_id, limit)
+        print(f"✅ 計算履歴取得完了 - 件数: {len(histories) if histories else 0}")
         return jsonify({'histories': histories})
         
     except Exception as e:
+        print(f"❌ 計算履歴取得エラー: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 # 計算履歴詳細取得エンドポイント

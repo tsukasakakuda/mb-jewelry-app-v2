@@ -80,6 +80,46 @@ class CalculationManager:
             print(f"計算履歴保存エラー: {e}")
             return None
     
+    def get_calculation_history(self, user_id: int, limit: int = 50) -> List[Dict]:
+        """
+        ユーザーの計算履歴を取得（API互換性のためのエイリアス）
+        
+        Args:
+            user_id: ユーザーID
+            limit: 取得件数制限
+            
+        Returns:
+            計算履歴のリスト
+        """
+        try:
+            placeholder = self.db.get_sql_placeholder()
+            histories = self.db.execute_query(f"""
+                SELECT id, calculation_name, total_value, item_count, created_at
+                FROM calculation_history
+                WHERE user_id = {placeholder}
+                ORDER BY created_at DESC
+                LIMIT {placeholder}
+            """, (user_id, limit))
+            
+            result = []
+            for history in histories or []:
+                result.append({
+                    'id': history['id'],
+                    'calculation_name': history['calculation_name'],
+                    'total_value': float(history['total_value']) if history['total_value'] else 0,
+                    'item_count': history['item_count'],
+                    'created_at': history['created_at']
+                })
+            
+            print(f"✅ 計算履歴を取得しました (User: {user_id}, 件数: {len(result)}, Limit: {limit})")
+            return result
+            
+        except Exception as e:
+            print(f"計算履歴取得エラー: {e}")
+            import traceback
+            traceback.print_exc()
+            return []
+    
     def get_user_histories(self, user_id: int) -> List[Dict]:
         """
         ユーザーの計算履歴リストを取得

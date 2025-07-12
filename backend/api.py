@@ -87,6 +87,9 @@ def login():
             return jsonify({'message': 'ユーザー名またはパスワードが間違っています'}), 401
     
     except Exception as e:
+        print(f"❌ Login error: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'message': 'サーバーエラーが発生しました'}), 500
 
 # ユーザー情報取得エンドポイント

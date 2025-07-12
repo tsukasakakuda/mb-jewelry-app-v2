@@ -19,10 +19,17 @@ class UserManager:
     def _ensure_database_exists(self):
         """データベーステーブルの存在確認と自動作成"""
         try:
+            print("🔧 データベーステーブル初期化中...")
             self.db.initialize_tables()
+            print("✅ テーブル初期化完了")
+            
+            print("👤 デフォルト管理者ユーザー作成中...")
             self._create_default_admin()
+            print("✅ ユーザー管理初期化完了")
         except Exception as e:
-            print(f"Database initialization error: {e}")
+            print(f"❌ Database initialization error: {e}")
+            import traceback
+            traceback.print_exc()
     
     def _create_default_admin(self):
         """デフォルト管理者ユーザーの作成"""

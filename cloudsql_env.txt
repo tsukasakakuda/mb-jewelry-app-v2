@@ -1,0 +1,6 @@
+DB_TYPE=postgresql
+DB_HOST=/cloudsql/mb-jewelry-dev:asia-northeast1:mb-jewelry-dev
+DB_NAME=jewelry_db
+DB_USER=jewelry_user
+DB_PASSWORD=zwa/J5f+vbiKykZTYHk/s9kNyA2bLpu5gmA8wWm+uR4=
+DB_PORT=5432

@@ -714,6 +714,50 @@ def export_calculation_csv(history_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# 計算履歴のアイテム更新
+@app.route('/api/calculation-history/<int:history_id>/item/<int:item_index>', methods=['PUT'])
+@app.route('/calculation-history/<int:history_id>/item/<int:item_index>', methods=['PUT'])
+@token_required
+def update_calculation_item(history_id, item_index):
+    """計算履歴の特定のアイテムを更新"""
+    try:
+        user_id = request.current_user.get('user_id')
+        
+        # 計算履歴の詳細を取得
+        detail = calculation_manager.get_calculation_detail(history_id, user_id)
+        if not detail:
+            return jsonify({'error': '計算履歴が見つかりません'}), 404
+        
+        # アイテムインデックスの検証
+        items = detail['calculation_data']['items']
+        if item_index < 0 or item_index >= len(items):
+            return jsonify({'error': '無効なアイテムインデックスです'}), 400
+        
+        # 更新データの取得
+        update_data = request.get_json()
+        if not update_data:
+            return jsonify({'error': '更新データが必要です'}), 400
+        
+        # アイテムデータの更新
+        items[item_index].update(update_data)
+        
+        # 価格の再計算（material_weight と material_price があれば）
+        if 'material_weight' in update_data and 'material_price' in update_data:
+            try:
+                material_weight = float(update_data['material_weight'])
+                material_price = float(update_data['material_price'])
+                items[item_index]['jewelry_price'] = material_weight * material_price
+            except (ValueError, TypeError):
+                pass  # 計算できない場合はそのまま
+        
+        # データベースの更新
+        calculation_manager.update_calculation_detail(history_id, user_id, detail['calculation_data'])
+        
+        return jsonify({'message': 'アイテムが更新されました', 'item': items[item_index]})
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/')
 def serve_vue():
     return send_from_directory(app.static_folder, 'index.html')

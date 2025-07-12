@@ -137,6 +137,12 @@
                 詳細
               </button>
               <button 
+                @click="viewSpreadsheet(history.id)"
+                class="px-4 py-2 bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 rounded-lg transition-colors border border-purple-200 hover:border-purple-300"
+              >
+                表計算
+              </button>
+              <button 
                 @click="exportToCsv(history.id)"
                 class="px-4 py-2 bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700 rounded-lg transition-colors border border-green-200 hover:border-green-300"
               >
@@ -254,6 +260,7 @@
                     <th class="text-left p-3 font-medium text-gray-700">重量</th>
                     <th class="text-left p-3 font-medium text-gray-700">評価額</th>
                     <th class="text-left p-3 font-medium text-gray-700">備考</th>
+                    <th class="text-left p-3 font-medium text-gray-700">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -268,6 +275,14 @@
                     <td class="p-3 text-gray-800">{{ item.weight || '-' }}</td>
                     <td class="p-3 text-gray-800 font-medium">¥{{ formatPrice(item.jewelry_price) }}</td>
                     <td class="p-3 text-gray-600 text-xs max-w-xs truncate">{{ item.misc || '-' }}</td>
+                    <td class="p-3">
+                      <button 
+                        @click="viewItemDetail(selectedDetail.id, index)"
+                        class="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 rounded text-xs transition-colors border border-blue-200 hover:border-blue-300"
+                      >
+                        詳細
+                      </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -297,11 +312,13 @@
 
 <script>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { getToken } from '@/utils/auth.js'
 
 export default {
   name: 'CalculationHistoryPage',
   setup() {
+    const router = useRouter()
     const histories = ref([])
     const stats = ref({})
     const isLoading = ref(false)
@@ -434,6 +451,14 @@ export default {
       }
     }
 
+    const viewItemDetail = (historyId, itemIndex) => {
+      router.push(`/history/${historyId}/item/${itemIndex}`)
+    }
+
+    const viewSpreadsheet = (historyId) => {
+      router.push(`/history/${historyId}/spreadsheet`)
+    }
+
     const deleteHistory = async (historyId) => {
       if (!confirm('この計算履歴を削除しますか？')) return
 
@@ -475,6 +500,8 @@ export default {
       viewDetail,
       closeDetailModal,
       exportToCsv,
+      viewItemDetail,
+      viewSpreadsheet,
       deleteHistory
     }
   }

@@ -193,6 +193,45 @@ class CalculationManager:
         finally:
             conn.close()
     
+    def update_calculation_detail(self, history_id: int, user_id: int, calculation_data: Dict) -> bool:
+        """
+        計算履歴の詳細データを更新
+        
+        Args:
+            history_id: 計算履歴ID
+            user_id: ユーザーID（権限確認用）
+            calculation_data: 更新する計算データ
+            
+        Returns:
+            更新成功時True、失敗時False
+        """
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            # データをJSON文字列に変換
+            calculation_data_json = json.dumps(calculation_data, ensure_ascii=False)
+            
+            cursor.execute('''
+                UPDATE calculation_history
+                SET calculation_data = ?
+                WHERE id = ? AND user_id = ?
+            ''', (calculation_data_json, history_id, user_id))
+            
+            if cursor.rowcount > 0:
+                conn.commit()
+                print(f"✅ 計算履歴の詳細を更新しました (ID: {history_id})")
+                return True
+            
+            return False
+            
+        except Exception as e:
+            print(f"計算履歴詳細更新エラー: {e}")
+            conn.rollback()
+            return False
+        finally:
+            conn.close()
+    
     def get_user_statistics(self, user_id: int) -> Dict:
         """
         ユーザーの計算統計を取得

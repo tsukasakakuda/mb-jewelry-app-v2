@@ -6,6 +6,8 @@ import CsvEditorPage from '@/views/CsvEditorPage.vue';
 import MetalCalculatePage from '@/views/MetalCalculatePage.vue';
 import CalculationHistoryPage from '@/views/CalculationHistoryPage.vue';
 import AdminDbView from '@/views/AdminDbView.vue';
+import ItemDetailPage from '@/views/ItemDetailPage.vue';
+import SpreadsheetDetailPage from '@/views/SpreadsheetDetailPage.vue';
 import { isAuthenticated } from '@/utils/auth.js';
 
 const routes = [
@@ -15,6 +17,8 @@ const routes = [
   { path: '/login', name: 'LoginPage', component: LoginPage },
   { path: '/csv', name: 'CsvEditor', component: CsvEditorPage, meta: { requiresAuth: true } },
   { path: '/history', name: 'CalculationHistory', component: CalculationHistoryPage, meta: { requiresAuth: true } },
+  { path: '/history/:historyId/item/:itemIndex', name: 'ItemDetail', component: ItemDetailPage, meta: { requiresAuth: true } },
+  { path: '/history/:historyId/spreadsheet', name: 'SpreadsheetDetail', component: SpreadsheetDetailPage, meta: { requiresAuth: true } },
   { path: '/admin/db', name: 'AdminDbView', component: AdminDbView, meta: { requiresAuth: true, requiresAdmin: true } }
 ];
 

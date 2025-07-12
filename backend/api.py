@@ -10,8 +10,19 @@ import json
 import jwt
 import hashlib
 from functools import wraps
-from user_manager import user_manager
-from calculation_manager import calculation_manager
+import os
+
+# 環境変数でマネージャーのバージョンを選択
+USE_CLOUD_SQL = os.getenv('DB_TYPE') == 'postgresql'
+
+if USE_CLOUD_SQL:
+    from user_manager_v2 import UserManager
+    from calculation_manager_v2 import CalculationManager
+    user_manager = UserManager()
+    calculation_manager = CalculationManager()
+else:
+    from user_manager import user_manager
+    from calculation_manager import calculation_manager
 
 app = Flask(__name__, static_folder='frontend/dist', static_url_path='')
 CORS(app)

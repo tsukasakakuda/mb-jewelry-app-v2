@@ -5,3 +5,4 @@ pandas
 numpy
 PyJWT
 bcrypt
+psycopg2-binary

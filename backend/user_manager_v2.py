@@ -119,7 +119,7 @@ class UserManager:
             if bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8')):
                 print(f"✅ ユーザー '{username}' の認証に成功しました")
                 return {
-                    'user_id': user['id'],
+                    'id': user['id'],
                     'username': user['username'],
                     'role': user['role']
                 }

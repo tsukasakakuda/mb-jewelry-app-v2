@@ -5,7 +5,7 @@
 echo "🔧 Setting up Cloud SQL for mb-jewelry-app..."
 
 # プロジェクト設定
-PROJECT_ID="mb-jewelry-app"
+PROJECT_ID=$(gcloud config get-value project)
 INSTANCE_NAME="mb-jewelry-dev"
 DATABASE_NAME="jewelry_db"
 USER_NAME="jewelry_user"

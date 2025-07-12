@@ -3,9 +3,9 @@
 # Cloud SQL対応デプロイスクリプト
 # 使用方法: ./deploy_cloudsql.sh [PROJECT_ID] [REGION]
 
-PROJECT_ID=${1:-"mb-jewelry-app"}
+PROJECT_ID=${1:-$(gcloud config get-value project)}
 REGION=${2:-"asia-northeast1"}
-SERVICE_NAME="mb-jewelry-app"
+SERVICE_NAME="mb-jewelry-dev"
 INSTANCE_NAME="mb-jewelry-dev"
 
 echo "🚀 GCPプロジェクト: $PROJECT_ID"

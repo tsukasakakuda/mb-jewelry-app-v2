@@ -5,7 +5,6 @@ echo "🔧 Cloud SQL Proxy デバッグモードで起動"
 # Cloud SQL Proxyを詳細ログ付きで起動
 cloud-sql-proxy mb-jewelry-dev:asia-northeast1:mb-jewelry-dev \
   --port 5432 \
-  --verbose \
   --structured-logs &
 
 PROXY_PID=$!

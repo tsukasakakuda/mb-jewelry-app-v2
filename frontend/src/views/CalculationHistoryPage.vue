@@ -10,28 +10,16 @@
     <!-- Header -->
     <header class="relative z-10 px-6 py-8">
       <div class="max-w-7xl mx-auto">
-        <div class="flex items-center justify-between mb-6">
-          <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
-              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </div>
-            <div>
-              <h1 class="text-3xl font-bold text-gray-800 tracking-wide">計算履歴</h1>
-              <p class="text-gray-600">過去の計算結果を確認・管理・再利用</p>
-            </div>
-          </div>
-          
-          <router-link 
-            to="/history/box-groups" 
-            class="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-lg transition-colors duration-200 flex items-center space-x-2"
-          >
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        <div class="flex items-center space-x-4 mb-6">
+          <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
+            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
             </svg>
-            <span>箱番号別表示</span>
-          </router-link>
+          </div>
+          <div>
+            <h1 class="text-3xl font-bold text-gray-800 tracking-wide">計算履歴</h1>
+            <p class="text-gray-600">過去の計算結果を確認・管理・再利用</p>
+          </div>
         </div>
 
         <!-- Stats Cards -->
@@ -149,8 +137,17 @@
                 詳細
               </button>
               <button 
+                @click="viewBoxGroups(history.id)"
+                class="px-3 py-2 bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 rounded-lg transition-colors border border-purple-200 hover:border-purple-300 flex items-center space-x-1"
+              >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+                <span>箱別</span>
+              </button>
+              <button 
                 @click="viewSpreadsheet(history.id)"
-                class="px-4 py-2 bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 rounded-lg transition-colors border border-purple-200 hover:border-purple-300"
+                class="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 hover:text-indigo-700 rounded-lg transition-colors border border-indigo-200 hover:border-indigo-300"
               >
                 表計算
               </button>
@@ -494,6 +491,10 @@ export default {
       }
     }
 
+    const viewBoxGroups = (historyId) => {
+      router.push('/history/box-groups')
+    }
+
     onMounted(() => {
       loadHistories()
       loadStats()
@@ -514,6 +515,7 @@ export default {
       exportToCsv,
       viewItemDetail,
       viewSpreadsheet,
+      viewBoxGroups,
       deleteHistory
     }
   }

@@ -134,6 +134,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { isAuthenticated, getToken } from '@/utils/auth.js'
 
 export default {
   name: 'BoxGroupsPage',
@@ -148,12 +149,16 @@ export default {
         loading.value = true
         error.value = ''
         
-        const token = localStorage.getItem('token')
-        if (!token) {
+        if (!isAuthenticated()) {
+          console.log('Not authenticated, redirecting to login')
           router.push('/login')
           return
         }
 
+        const token = getToken()
+
+        console.log('Fetching box groups with token:', token.substring(0, 20) + '...')
+        
         const response = await axios.get('/api/calculation-history/box-groups', {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -163,14 +168,19 @@ export default {
           }
         })
 
+        console.log('Box groups response:', response.data)
         boxGroups.value = response.data.box_groups || {}
       } catch (err) {
         console.error('箱番号グループ取得エラー:', err)
-        error.value = err.response?.data?.error || '箱番号グループの取得に失敗しました'
+        console.error('Error response:', err.response)
         
         if (err.response?.status === 401) {
+          console.log('Authentication failed, redirecting to login')
           localStorage.removeItem('token')
           router.push('/login')
+        } else {
+          // 認証エラー以外の場合はページに留まり、エラーメッセージを表示
+          error.value = err.response?.data?.error || '箱番号グループの取得に失敗しました'
         }
       } finally {
         loading.value = false
@@ -202,6 +212,13 @@ export default {
     }
 
     onMounted(() => {
+      // 初期認証チェック
+      if (!isAuthenticated()) {
+        console.log('Not authenticated on mount, redirecting to login')
+        router.push('/login')
+        return
+      }
+      
       fetchBoxGroups()
     })
 

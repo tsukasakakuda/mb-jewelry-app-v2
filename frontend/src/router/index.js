@@ -17,10 +17,10 @@ const routes = [
   //{ path: '/calculate', name: 'UploadForm', component: UploadForm },
   { path: '/login', name: 'LoginPage', component: LoginPage },
   { path: '/csv', name: 'CsvEditor', component: CsvEditorPage, meta: { requiresAuth: true } },
-  { path: '/history', name: 'CalculationHistory', component: CalculationHistoryPage, meta: { requiresAuth: true } },
   { path: '/history/box-groups', name: 'BoxGroups', component: BoxGroupsPage, meta: { requiresAuth: true } },
   { path: '/history/:historyId/item/:itemIndex', name: 'ItemDetail', component: ItemDetailPage, meta: { requiresAuth: true } },
   { path: '/history/:historyId/spreadsheet', name: 'SpreadsheetDetail', component: SpreadsheetDetailPage, meta: { requiresAuth: true } },
+  { path: '/history', name: 'CalculationHistory', component: CalculationHistoryPage, meta: { requiresAuth: true } },
   { path: '/admin/db', name: 'AdminDbView', component: AdminDbView, meta: { requiresAuth: true, requiresAdmin: true } }
 ];
 

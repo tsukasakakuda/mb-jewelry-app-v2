@@ -111,39 +111,6 @@
         </div>
       </div>
 
-      <!-- Features Section -->
-      <div class="mt-16">
-        <h3 class="text-2xl font-bold text-gray-800 text-center mb-8">主要機能</h3>
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="text-center">
-            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-            </div>
-            <h4 class="text-gray-800 font-semibold mb-2">高精度計算</h4>
-            <p class="text-gray-600 text-sm">最新の市場価格を反映した正確な算出</p>
-          </div>
-          <div class="text-center">
-            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M13 9h-2v2h2V9zm0 4h-2v6h2v-6zm-1-9C6.48 4 2 8.48 2 14s4.48 10 10 10 10-4.48 10-10S17.52 4 12 4z"/>
-              </svg>
-            </div>
-            <h4 class="text-gray-800 font-semibold mb-2">直感的操作</h4>
-            <p class="text-gray-600 text-sm">シンプルで使いやすいインターフェース</p>
-          </div>
-          <div class="text-center">
-            <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
-              </svg>
-            </div>
-            <h4 class="text-gray-800 font-semibold mb-2">リアルタイム更新</h4>
-            <p class="text-gray-600 text-sm">市場の変動に即座対応した価格情報</p>
-          </div>
-        </div>
-      </div>
     </main>
   </div>
 </template>

@@ -95,6 +95,19 @@
               <span class="text-red-700 text-sm">{{ errorMessage }}</span>
             </div>
           </div>
+
+          <!-- Demo Account Info -->
+          <div class="mt-8 pt-8 border-t border-gray-200">
+            <h3 class="text-center text-gray-600 text-sm font-medium mb-4">デモアカウント</h3>
+            <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+              <h4 class="text-gray-800 font-semibold text-sm">テスト用アカウント</h4>
+              <div class="text-gray-700 text-sm">
+                <div>ユーザー名: admin</div>
+                <div>パスワード: admin123</div>
+              </div>
+              <p class="text-orange-600 text-xs mt-2">※ 開発用のダミーアカウントです</p>
+            </div>
+          </div>
         </form>
       </div>
     </div>

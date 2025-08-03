@@ -42,13 +42,19 @@ export const getUserInfo = () => {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]))
     return {
-      id: payload.sub,
+      id: payload.user_id || payload.sub,
       username: payload.username || payload.sub,
+      role: payload.role,
       exp: payload.exp
     }
   } catch (error) {
     return null
   }
+}
+
+export const isAdmin = () => {
+  const userInfo = getUserInfo()
+  return userInfo && userInfo.role === 'admin'
 }
 
 export const createAuthHeader = () => {

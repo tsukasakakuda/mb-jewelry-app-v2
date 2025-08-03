@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <SidebarMenu />
-    <main class="main-content">
+    <SidebarMenu @sidebar-toggle="handleSidebarToggle" />
+    <main class="main-content" :class="{ 'sidebar-open': sidebarOpen, 'sidebar-closed': !sidebarOpen }">
       <router-view />
     </main>
   </div>
@@ -9,7 +9,20 @@
 
 <script>
 import SidebarMenu from './components/SidebarMenu.vue';
-export default { components: { SidebarMenu } };
+
+export default { 
+  components: { SidebarMenu },
+  data() {
+    return {
+      sidebarOpen: true
+    }
+  },
+  methods: {
+    handleSidebarToggle(isOpen) {
+      this.sidebarOpen = isOpen
+    }
+  }
+};
 </script>
 
 <style>
@@ -42,8 +55,12 @@ body {
 }
 
 @media (min-width: 768px) {
-  .main-content {
+  .main-content.sidebar-open {
     margin-left: 256px;
+  }
+  
+  .main-content.sidebar-closed {
+    margin-left: 0;
   }
 }
 

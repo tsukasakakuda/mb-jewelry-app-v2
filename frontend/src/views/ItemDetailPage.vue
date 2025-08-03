@@ -120,6 +120,54 @@
               />
               <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{{ itemData.weight || '-' }}</p>
             </div>
+
+            <!-- Brand Name -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">ブランド</label>
+              <input 
+                v-if="isEditing"
+                v-model="editData.brand_name"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                type="text"
+              />
+              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{{ itemData.brand_name || '-' }}</p>
+            </div>
+
+            <!-- Category -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">品目</label>
+              <input 
+                v-if="isEditing"
+                v-model="editData.subcategory_name"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                type="text"
+              />
+              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{{ itemData.subcategory_name || '-' }}</p>
+            </div>
+
+            <!-- Accessories -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">付属品</label>
+              <input 
+                v-if="isEditing"
+                v-model="editData.accessory_comment"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                type="text"
+              />
+              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{{ itemData.accessory_comment || '-' }}</p>
+            </div>
+          </div>
+          
+          <!-- Miscellaneous (moved from detail section) -->
+          <div class="mt-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">備考</label>
+            <textarea 
+              v-if="isEditing"
+              v-model="editData.misc"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+              rows="3"
+            ></textarea>
+            <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg min-h-[80px]">{{ itemData.misc || '-' }}</p>
           </div>
         </div>
 
@@ -127,9 +175,9 @@
         <div class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl p-6 shadow-lg">
           <h2 class="text-xl font-semibold text-gray-800 mb-4">価格情報</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Jewelry Price -->
+            <!-- Metal Price (renamed from Jewelry Price) -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">評価額</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">地金代金</label>
               <input 
                 v-if="isEditing"
                 v-model="editData.jewelry_price"
@@ -142,9 +190,9 @@
               </p>
             </div>
 
-            <!-- Material Price -->
+            <!-- Material Unit Price (renamed from Material Price) -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">素材価格</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">素材単価</label>
               <input 
                 v-if="isEditing"
                 v-model="editData.material_price"
@@ -186,59 +234,110 @@
                 {{ formatWeight(itemData.gemstone_weight) }}
               </p>
             </div>
+
+            <!-- Budget Lower Limit -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">予算下限</label>
+              <input 
+                v-if="isEditing"
+                v-model="editData.budget_lower"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                type="number"
+                step="1"
+              />
+              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">
+                ¥{{ formatPrice(itemData.budget_lower) }}
+              </p>
+            </div>
+
+            <!-- Budget Upper Limit -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">予算上限</label>
+              <input 
+                v-if="isEditing"
+                v-model="editData.budget_upper"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                type="number"
+                step="1"
+              />
+              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">
+                ¥{{ formatPrice(itemData.budget_upper) }}
+              </p>
+            </div>
+
+            <!-- Budget Reserve -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">予算予備</label>
+              <input 
+                v-if="isEditing"
+                v-model="editData.budget_reserve"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                type="number"
+                step="1"
+              />
+              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">
+                ¥{{ formatPrice(itemData.budget_reserve) }}
+              </p>
+            </div>
+
+            <!-- Frame Price -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">枠代金</label>
+              <input 
+                v-if="isEditing"
+                v-model="editData.frame_price"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                type="number"
+                step="1"
+              />
+              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">
+                ¥{{ formatPrice(itemData.frame_price) }}
+              </p>
+            </div>
+
+            <!-- Side Stone Price -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">脇石金額</label>
+              <input 
+                v-if="isEditing"
+                v-model="editData.side_stone_price"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
+                type="number"
+                step="1"
+              />
+              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">
+                ¥{{ formatPrice(itemData.side_stone_price) }}
+              </p>
+            </div>
           </div>
         </div>
 
         <!-- Additional Information Card -->
         <div class="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl p-6 shadow-lg">
           <h2 class="text-xl font-semibold text-gray-800 mb-4">詳細情報</h2>
-          <div class="space-y-4">
-            <!-- Miscellaneous -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- LIVE -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">備考</label>
-              <textarea 
-                v-if="isEditing"
-                v-model="editData.misc"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
-                rows="3"
-              ></textarea>
-              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg min-h-[80px]">{{ itemData.misc || '-' }}</p>
-            </div>
-
-            <!-- Brand Name -->
-            <div v-if="itemData.brand_name">
-              <label class="block text-sm font-medium text-gray-700 mb-1">ブランド</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">LIVE</label>
               <input 
                 v-if="isEditing"
-                v-model="editData.brand_name"
+                v-model="editData.live"
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                 type="text"
               />
-              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{{ itemData.brand_name || '-' }}</p>
+              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{{ itemData.live || '-' }}</p>
             </div>
 
-            <!-- Category -->
-            <div v-if="itemData.subcategory_name">
-              <label class="block text-sm font-medium text-gray-700 mb-1">品目</label>
+            <!-- RANK -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">RANK</label>
               <input 
                 v-if="isEditing"
-                v-model="editData.subcategory_name"
+                v-model="editData.rank"
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
                 type="text"
               />
-              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{{ itemData.subcategory_name || '-' }}</p>
-            </div>
-
-            <!-- Accessories -->
-            <div v-if="itemData.accessory_comment">
-              <label class="block text-sm font-medium text-gray-700 mb-1">付属品</label>
-              <input 
-                v-if="isEditing"
-                v-model="editData.accessory_comment"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
-                type="text"
-              />
-              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{{ itemData.accessory_comment || '-' }}</p>
+              <p v-else class="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{{ itemData.rank || '-' }}</p>
             </div>
           </div>
         </div>
@@ -283,14 +382,12 @@ export default {
 
     const toggleEdit = async () => {
       if (isEditing.value) {
-        // Cancel editing - restore original data
-        Object.assign(editData, itemData.value)
+        // Cancel editing - reset to false and don't save changes
         isEditing.value = false
       } else {
-        // Start editing - copy current data
-        isEditing.value = true
-        await nextTick()
+        // Start editing - copy current data to editData
         Object.assign(editData, itemData.value)
+        isEditing.value = true
         console.log('Edit data:', editData)
         console.log('Item data:', itemData.value)
       }
@@ -299,21 +396,52 @@ export default {
     const saveChanges = async () => {
       try {
         const token = getToken()
+        
+        // フィールド名をデータベースに合わせてマッピング
+        const mappedData = { ...editData }
+        if (mappedData.weight !== undefined) {
+          mappedData.weight_text = mappedData.weight
+          delete mappedData.weight
+        }
+        
+        // データベースに存在するフィールドのみを送信
+        const dbFields = [
+          'box_id', 'box_no', 'material', 'weight_text', 'weight_grams', 
+          'jewelry_price', 'material_price', 'total_weight', 'gemstone_weight', 'material_weight', 'misc',
+          'brand_name', 'subcategory_name', 'accessory_comment',
+          'budget_lower', 'budget_upper', 'budget_reserve',
+          'frame_price', 'side_stone_price', 'live', 'rank'
+        ]
+        const filteredData = {}
+        for (const field of dbFields) {
+          if (mappedData[field] !== undefined) {
+            filteredData[field] = mappedData[field]
+          }
+        }
+        
+        console.log('Saving data:', filteredData)
+        
         const response = await fetch(`/api/calculation-history/${historyId.value}/item/${itemIndex.value}`, {
           method: 'PUT',
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(editData)
+          body: JSON.stringify(filteredData)
         })
 
         if (response.ok) {
-          itemData.value = { ...editData }
+          // 表示データを更新（フロントエンド用のマッピングを保持）
+          const updatedData = { ...editData }
+          if (updatedData.weight !== undefined && filteredData.weight_text !== undefined) {
+            updatedData.weight_text = filteredData.weight_text
+          }
+          Object.assign(itemData.value, updatedData)
           isEditing.value = false
           alert('変更が保存されました')
         } else {
-          throw new Error('保存に失敗しました')
+          const errorData = await response.json()
+          throw new Error(errorData.error || '保存に失敗しました')
         }
       } catch (err) {
         alert(err.message)
@@ -344,8 +472,17 @@ export default {
         const items = data.calculation_data?.items || []
         
         if (itemIndex.value >= 0 && itemIndex.value < items.length) {
-          itemData.value = items[itemIndex.value]
-          Object.assign(editData, itemData.value)
+          const item = items[itemIndex.value]
+          
+          // データベースフィールドをフロントエンド用にマッピング
+          const mappedItem = { ...item }
+          if (mappedItem.weight_text !== undefined) {
+            mappedItem.weight = mappedItem.weight_text
+          }
+          
+          itemData.value = mappedItem
+          Object.assign(editData, mappedItem)
+          console.log('Loaded item data:', mappedItem)
         } else {
           throw new Error('アイテムが見つかりません')
         }

@@ -267,7 +267,9 @@
                     <th class="text-left p-3 font-medium text-gray-700">枝番</th>
                     <th class="text-left p-3 font-medium text-gray-700">素材</th>
                     <th class="text-left p-3 font-medium text-gray-700">重量</th>
-                    <th class="text-left p-3 font-medium text-gray-700">評価額</th>
+                    <th class="text-left p-3 font-medium text-gray-700">地金代金</th>
+                    <th class="text-left p-3 font-medium text-gray-700">LIVE</th>
+                    <th class="text-left p-3 font-medium text-gray-700">RANK</th>
                     <th class="text-left p-3 font-medium text-gray-700">備考</th>
                     <th class="text-left p-3 font-medium text-gray-700">操作</th>
                   </tr>
@@ -283,6 +285,8 @@
                     <td class="p-3 text-gray-800">{{ item.material || '-' }}</td>
                     <td class="p-3 text-gray-800">{{ item.weight || '-' }}</td>
                     <td class="p-3 text-gray-800 font-medium">¥{{ formatPrice(item.jewelry_price) }}</td>
+                    <td class="p-3 text-gray-600 text-xs">{{ item.live || '-' }}</td>
+                    <td class="p-3 text-gray-600 text-xs">{{ item.rank || '-' }}</td>
                     <td class="p-3 text-gray-600 text-xs max-w-xs truncate">{{ item.misc || '-' }}</td>
                     <td class="p-3">
                       <button 
@@ -492,7 +496,7 @@ export default {
     }
 
     const viewBoxGroups = (historyId) => {
-      router.push('/history/box-groups')
+      router.push(`/history/${historyId}/box-groups`)
     }
 
     onMounted(() => {

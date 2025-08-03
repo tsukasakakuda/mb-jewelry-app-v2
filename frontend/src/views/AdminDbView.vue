@@ -29,21 +29,33 @@
         <div v-for="table in dbInfo.tables" :key="table" class="bg-white rounded-xl shadow overflow-hidden">
           <div class="bg-gray-50 px-6 py-4 border-b">
             <h3 class="text-lg font-semibold text-gray-800">{{ table }}</h3>
-            <p class="text-sm text-gray-600">レコード数: {{ dbContent[table]?.length || 0 }}</p>
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-600">
+                  総レコード数: {{ dbContent[table]?.total_count || 0 }}
+                  <span v-if="dbContent[table]?.limited" class="text-orange-600">
+                    ({{ dbContent[table]?.displayed_count }}件表示)
+                  </span>
+                </p>
+              </div>
+              <div v-if="dbContent[table]?.limited" class="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded">
+                制限表示中
+              </div>
+            </div>
           </div>
           
-          <div v-if="dbContent[table]?.length" class="overflow-x-auto">
+          <div v-if="dbContent[table]?.data?.length" class="overflow-x-auto">
             <table class="w-full text-sm">
               <thead class="bg-gray-100">
                 <tr>
-                  <th v-for="key in Object.keys(dbContent[table][0])" :key="key" 
+                  <th v-for="key in Object.keys(dbContent[table].data[0])" :key="key" 
                       class="text-left p-3 font-medium text-gray-700">
                     {{ key }}
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(row, index) in dbContent[table]" :key="index" 
+                <tr v-for="(row, index) in dbContent[table].data" :key="index" 
                     class="border-t hover:bg-gray-50">
                   <td v-for="key in Object.keys(row)" :key="key" class="p-3 text-gray-800">
                     <div v-if="key === 'calculation_data'" class="max-w-xs">
@@ -109,20 +121,30 @@ export default {
           throw new Error('認証が必要です')
         }
 
+        console.log('Fetching admin DB content...')
         const response = await fetch('/api/admin/db-content', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         })
 
+        console.log('Response status:', response.status)
+        
         if (!response.ok) {
+          const errorData = await response.text()
+          console.log('Error response:', errorData)
+          
           if (response.status === 403) {
             throw new Error('管理者権限が必要です')
+          } else if (response.status === 401) {
+            throw new Error('認証が無効です。再ログインしてください')
           }
-          throw new Error('データベース内容の取得に失敗しました')
+          throw new Error(`データベース内容の取得に失敗しました (${response.status})`)
         }
 
         const data = await response.json()
+        console.log('DB content loaded:', Object.keys(data))
+        
         dbContent.value = data.content
         dbInfo.value = {
           tables: data.tables,
@@ -130,6 +152,7 @@ export default {
         }
         
       } catch (err) {
+        console.error('LoadDbContent error:', err)
         error.value = err.message
       } finally {
         isLoading.value = false

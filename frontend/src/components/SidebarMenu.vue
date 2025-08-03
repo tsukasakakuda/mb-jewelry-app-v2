@@ -1,5 +1,34 @@
 <template>
   <div class="sidebar-container">
+    <!-- Desktop Menu Toggle -->
+    <button 
+      @click="toggleMenu" 
+      class="desktop-menu-btn hidden md:block fixed top-4 left-4 z-50 p-3 bg-white/80 backdrop-blur-lg border border-gray-200 rounded-xl text-gray-700 hover:bg-white/90 transition-all duration-200"
+      :style="{ left: isOpen ? '260px' : '16px' }"
+    >
+      <svg 
+        class="w-6 h-6 transform transition-transform duration-200" 
+        fill="none" 
+        stroke="currentColor" 
+        viewBox="0 0 24 24"
+      >
+        <path 
+          v-if="isOpen"
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          stroke-width="2"
+          d="M11 19l-7-7 7-7"
+        />
+        <path 
+          v-else
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          stroke-width="2"
+          d="M13 5l7 7-7 7"
+        />
+      </svg>
+    </button>
+    
     <!-- Mobile Menu Toggle -->
     <button 
       @click="toggleMenu" 
@@ -137,7 +166,13 @@
     </div>
 
     <!-- Desktop Sidebar -->
-    <div class="desktop-sidebar hidden md:flex fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 flex-col z-30">
+    <div 
+      :class="[
+        'desktop-sidebar hidden md:flex fixed top-0 h-full w-64 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 flex-col z-30 transform transition-transform duration-300 ease-in-out',
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      ]"
+      style="left: 0;"
+    >
       <div class="flex flex-col h-full backdrop-blur-xl bg-white/80 border-r border-gray-200">
         <!-- Desktop Header -->
         <div class="p-6 border-b border-gray-200">
@@ -269,21 +304,58 @@ export default {
   },
   data() {
     return {
-      isOpen: false
+      isOpen: window.innerWidth >= 768 // デスクトップではデフォルトで開いている
     }
   },
   methods: {
     toggleMenu() {
       this.isOpen = !this.isOpen
+      this.$emit('sidebar-toggle', this.isOpen)
     },
     closeMenu() {
       this.isOpen = false
+      this.$emit('sidebar-toggle', this.isOpen)
     }
   },
+  emits: ['sidebar-toggle'],
   mounted() {
+    // 初期状態をemit
+    this.$emit('sidebar-toggle', this.isOpen)
+    
+    // モバイルでのみルート変更時にメニューを閉じる
     this.$router.afterEach(() => {
-      this.isOpen = false
+      if (window.innerWidth < 768) {
+        this.isOpen = false
+        this.$emit('sidebar-toggle', this.isOpen)
+      }
     })
+    
+    // ウィンドウリサイズ時の処理
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.handleResize)
+  },
+  methods: {
+    toggleMenu() {
+      this.isOpen = !this.isOpen
+      this.$emit('sidebar-toggle', this.isOpen)
+    },
+    closeMenu() {
+      this.isOpen = false
+      this.$emit('sidebar-toggle', this.isOpen)
+    },
+    handleResize() {
+      // デスクトップ→モバイル時は閉じる、モバイル→デスクトップ時は開く
+      const isMobile = window.innerWidth < 768
+      if (isMobile && this.isOpen) {
+        this.isOpen = false
+        this.$emit('sidebar-toggle', this.isOpen)
+      } else if (!isMobile && !this.isOpen) {
+        this.isOpen = true
+        this.$emit('sidebar-toggle', this.isOpen)
+      }
+    }
   }
 }
 </script>
@@ -293,14 +365,20 @@ export default {
   position: relative;
 }
 
-.mobile-menu-btn {
+.mobile-menu-btn,
+.desktop-menu-btn {
   transform: translateZ(0);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.mobile-menu-btn:hover {
+.mobile-menu-btn:hover,
+.desktop-menu-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.desktop-menu-btn {
+  transition: all 0.3s ease;
 }
 
 .mobile-sidebar {

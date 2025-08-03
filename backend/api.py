@@ -603,36 +603,81 @@ def get_calculation_box_groups():
         print(f"📦 箱番号グループ取得開始 - User ID: {user_id}, Max per box: {max_per_box}")
         
         # 計算履歴の詳細を取得
-        histories = calculation_manager.get_user_histories(user_id)
+        histories = calculation_manager.get_calculation_history(user_id, 50)
         box_groups = {}
         
-        for history in histories:
-            # 計算データの詳細を取得
-            detail = calculation_manager.get_calculation_detail(history['id'], user_id)
-            if not detail or 'calculation_data' not in detail:
-                continue
-                
-            items = detail['calculation_data'].get('items', [])
-            
-            # 各アイテムの box_id でグループ化
-            for item in items:
-                box_id = item.get('box_id', 'unknown')
-                if box_id not in box_groups:
-                    box_groups[box_id] = []
-                
-                # 最大件数制限
-                if len(box_groups[box_id]) < max_per_box:
-                    box_groups[box_id].append({
-                        'history_id': history['id'],
-                        'calculation_name': history['calculation_name'],
-                        'created_at': history['created_at'],
-                        'item': item
-                    })
+        def normalize_box_id(box_id):
+            """box_idを統一された文字列形式に正規化"""
+            if box_id is None:
+                return 'unknown'
+            # 数値として解釈できる場合は整数に変換してから文字列に
+            try:
+                if isinstance(box_id, (int, float)):
+                    return str(int(box_id))
+                elif isinstance(box_id, str):
+                    if box_id.strip().isdigit():
+                        return str(int(box_id.strip()))
+                    else:
+                        return box_id.strip() or 'unknown'
+                else:
+                    return str(box_id)
+            except (ValueError, TypeError):
+                return str(box_id) if box_id else 'unknown'
         
-        # 箱番号でソート
-        sorted_groups = {}
-        for box_id in sorted(box_groups.keys(), key=lambda x: int(x) if str(x).isdigit() else float('inf')):
-            sorted_groups[box_id] = box_groups[box_id]
+        for history in histories:
+            try:
+                print(f"📄 処理中の履歴: {history.get('id')} - {history.get('calculation_name')}")
+                
+                # 計算データの詳細を取得
+                detail = calculation_manager.get_calculation_detail(history['id'], user_id)
+                if not detail or 'calculation_data' not in detail:
+                    print(f"⚠️ 詳細データがありません: {history['id']}")
+                    continue
+                items = detail['calculation_data'].get('items', [])
+                print(f"📋 アイテム数: {len(items)}")
+                
+                # 各アイテムの box_id でグループ化
+                for item in items:
+                    raw_box_id = item.get('box_id', 'unknown')
+                    box_id = normalize_box_id(raw_box_id)
+                    print(f"📦 box_id: {raw_box_id} -> {box_id} (type: {type(box_id)})")
+                    
+                    if box_id not in box_groups:
+                        box_groups[box_id] = []
+                    
+                    # 最大件数制限
+                    if len(box_groups[box_id]) < max_per_box:
+                        box_groups[box_id].append({
+                            'history_id': history['id'],
+                            'calculation_name': history['calculation_name'],
+                            'created_at': history['created_at'],
+                            'item': item
+                        })
+            except Exception as item_error:
+                print(f"❌ アイテム処理エラー: {item_error}")
+                import traceback
+                traceback.print_exc()
+                continue
+        
+        # 安全なソート処理（数値として解釈できるものを優先）
+        try:
+            def safe_sort_key(box_id):
+                if box_id == 'unknown':
+                    return (1, 999999, box_id)  # unknownは最後に
+                try:
+                    # 数値として解釈できる場合
+                    num_value = int(box_id)
+                    return (0, num_value, box_id)
+                except (ValueError, TypeError):
+                    # 文字列として扱う
+                    return (1, 0, str(box_id))
+            
+            sorted_box_ids = sorted(box_groups.keys(), key=safe_sort_key)
+            sorted_groups = {box_id: box_groups[box_id] for box_id in sorted_box_ids}
+            print(f"📦 グループ化・ソート完了 - ソート順: {sorted_box_ids[:5]}{'...' if len(sorted_box_ids) > 5 else ''}")
+        except Exception as sort_error:
+            print(f"⚠️ ソートでエラー、ソートなしで返却: {sort_error}")
+            sorted_groups = box_groups
         
         print(f"✅ 箱番号グループ取得完了 - グループ数: {len(sorted_groups)}")
         return jsonify({'box_groups': sorted_groups})

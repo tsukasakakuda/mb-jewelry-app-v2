@@ -18,7 +18,7 @@
           </div>
           <div>
             <h1 class="text-2xl font-bold text-gray-800 tracking-wide">MB Jewelry</h1>
-            <p class="text-gray-600 text-sm">プロフェッショナルツールスイート</p>
+            <p class="text-gray-600 text-sm">For Jewelry Buyers</p>
           </div>
         </div>
         <button 
@@ -38,7 +38,7 @@
       <!-- Welcome Section -->
       <div class="text-center mb-12">
         <h2 class="text-4xl font-bold text-gray-800 mb-4 tracking-wide">メインメニュー</h2>
-        <p class="text-gray-600 text-lg max-w-2xl mx-auto">高精度な地金計算とデータ加工ツールで、ジュエリービジネスを効率化しましょう。</p>
+        <p class="text-gray-600 text-lg max-w-2xl mx-auto">機能一覧</p>
       </div>
 
       <!-- Menu Cards -->
@@ -53,7 +53,7 @@
                 </svg>
               </div>
               <h3 class="text-2xl font-bold text-gray-800 mb-3">地金自動計算</h3>
-              <p class="text-gray-600 mb-4">ゴールド、シルバー、プラチナの価格をリアルタイムで精密計算</p>
+              <p class="text-gray-600 mb-4">CSVファイルをアップロードして計算します。</p>
               <div class="flex items-center text-blue-600 group-hover:text-blue-700 transition-colors">
                 <span class="mr-2">計算を開始</span>
                 <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
@@ -78,7 +78,7 @@
                 </svg>
               </div>
               <h3 class="text-2xl font-bold text-gray-800 mb-3">CSV加工ツール</h3>
-              <p class="text-gray-600 mb-4">在庫データや価格リストを効率的に加工・分析</p>
+              <p class="text-gray-600 mb-4">出品データを下見用データへ変換します。</p>
               <div class="flex items-center text-green-600 group-hover:text-green-700 transition-colors">
                 <span class="mr-2">ツールを開く</span>
                 <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
@@ -99,7 +99,7 @@
                 </svg>
               </div>
               <h3 class="text-2xl font-bold text-gray-800 mb-3">計算履歴</h3>
-              <p class="text-gray-600 mb-4">過去の計算結果を確認・管理・再利用</p>
+              <p class="text-gray-600 mb-4">計算結果を確認・管理・再利用して下見記録を管理します。</p>
               <div class="flex items-center text-red-600 group-hover:text-red-700 transition-colors">
                 <span class="mr-2">履歴を確認</span>
                 <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">

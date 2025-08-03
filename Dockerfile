@@ -13,8 +13,10 @@ WORKDIR /app
 COPY backend/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# ✅ api.py や他のバックエンドファイルをコピー
-COPY backend/ .
+# ✅ api.py や他のバックエンドファイルをコピー（users.dbは除外）
+COPY backend/*.py ./
+COPY backend/*.json ./
+COPY backend/requirements.txt ./
 
 # ✅ ビルド済みのフロントを dist にコピー
 COPY --from=build-stage /app/frontend/dist ./frontend/dist

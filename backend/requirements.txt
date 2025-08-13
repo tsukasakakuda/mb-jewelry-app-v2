@@ -1,8 +1,0 @@
-# backend/requirements.txt
-flask
-flask-cors
-pandas
-numpy
-PyJWT
-bcrypt
-psycopg2-binary

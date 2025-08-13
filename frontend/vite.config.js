@@ -18,7 +18,8 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        // パス書き換えを削除 - APIエンドポイントは /api/xxx として定義されている
+        // rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   },
